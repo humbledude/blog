@@ -339,9 +339,10 @@ body .h2 {
   text-transform: none;
   letter-spacing: normal;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 body h3 {
+  position: relative;
   color: #383838;
   text-decoration: underline;
   font-weight: bold;
@@ -351,10 +352,10 @@ body h4,
 body h5,
 body h6 {
   display: inline;
-  border-bottom: 1px dashed #8c8c8c;
-  color: #8c8c8c;
+  border-bottom: 1px dashed #2bbc8a;
+  color: #383838;
   text-decoration: none;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 1rem;
 }
 body h3,
@@ -398,7 +399,7 @@ body abbr {
 body ul,
 body ol,
 body dl {
-  line-height: 1.65;
+  line-height: 1.8;
 }
 body ul ul,
 body ol ul,
@@ -464,7 +465,7 @@ body {
   font-weight: 400;
   font-size: 16px;
   font-family: "NanumBarunGothic", "Meslo LG", monospace;
-  line-height: 1.65;
+  line-height: 1.8;
   text-rendering: geometricPrecision;
   flex: 1;
   -moz-osx-font-smoothing: grayscale;
@@ -1086,6 +1087,15 @@ article .content h2:before {
   content: "#";
   font-weight: bold;
   font-size: 1.2rem;
+}
+article .content h3:before {
+  position: absolute;
+  top: -2px;
+  left: -1.2rem;
+  color: #2bbc8a;
+  content: "##";
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 article .content img,
 article .content video {
