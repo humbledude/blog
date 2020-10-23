@@ -15,7 +15,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/layout.png">
 <meta property="article:published_time" content="2019-07-11T15:00:00.000Z">
-<meta property="article:modified_time" content="2020-10-19T02:26:59.610Z">
+<meta property="article:modified_time" content="2020-10-23T08:44:06.391Z">
 <meta property="article:author" content="keunhui park">
 <meta property="article:tag" content="kubernetes">
 <meta property="article:tag" content="airflow">
@@ -250,6 +250,7 @@
 <p>여기서, <code>KubernetesExecutor</code> 를 사용한다면 task instance 마다 worker 가 생겨서 돌기 때문에, worker 가 사용하는 리소스도 고려 해야 한다.<br>worker 가 <code>KubernetesPodOperator</code> 를 구동한다면 하나의 pod 가 더 생성되고, 해당 pod 의 리소스 사용은 dag 에서 제한할 수 있는데, worker pod 자체의 리소스 관리 옵션은 따로 없는 듯 하다.<br>따라서 worker 에서 빡센? 작업을 하지 않도록 해야 하고, 특별히 빡센 작업을 하게 된다면 <code>KubernetesPodOperator</code> 로 따로 지정하고 리소스 관리를 하는게 좋겠다.</p>
 <h3 id="기타"><a href="#기타" class="headerlink" title="기타"></a>기타</h3><ul>
 <li>2020-10-19 업데이트 : 그동안의 깨달음을 바탕으로 전체 구조 그림, 글 좀 수정..</li>
+<li>2020-10-23 업데이트 : 차트 세부사항을 업데이트 해서 글 하나 더 썼어요 (<a href="https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart">여기</a>)</li>
 </ul>
 
   </div>
