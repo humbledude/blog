@@ -3,6 +3,13 @@
 
 
     <url>
+        <loc>https://humbledude.github.io/blog/tags/mac/</loc>
+        <lastmod>2020-10-23T05:04:43.487Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://humbledude.github.io/blog/tags/airflow/</loc>
         <lastmod>2020-10-19T02:26:59.610Z</lastmod>
         <changefreq>weekly</changefreq>

@@ -9,8 +9,33 @@
     <atom:link href="https://humbledude.github.io/blog/feed.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Tue, 13 Oct 2020 15:18:38 GMT</pubDate>
+    <pubDate>Fri, 23 Oct 2020 05:04:43 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>맥 타임머신 백업 속도 빠르게 하기</title>
+      <link>https://humbledude.github.io/blog/2020/10/23/mac-backup-speedup/</link>
+      <guid>https://humbledude.github.io/blog/2020/10/23/mac-backup-speedup/</guid>
+      <pubDate>Fri, 23 Oct 2020 05:00:00 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;맥을 옮기기 위해 처음 백업을 해봤다.&lt;br&gt;더럽게 느리길래 방법을 찾아봤는데..&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://macnews.tistory.com/4280&quot;&gt;https://macnews.tistory.com/4280&lt;/a&gt;&lt;br&gt;여</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>맥을 옮기기 위해 처음 백업을 해봤다.<br>더럽게 느리길래 방법을 찾아봤는데..</p><p><a href="https://macnews.tistory.com/4280">https://macnews.tistory.com/4280</a><br>여기서 시키는 대로 low priority 의 throttle 을 변경 했더니~~<br>똑같이 더럽게 느리더라</p><p>그래서 직접 백업프로세스의 우선순위를 높여보기로 했다.<br>아 이 방법은, 맥의 CPU 자원 사용을 더 높이는 거라서 단순히 백업 종료만 기다리는 상황일때만 써보자.<br>다른 작업의 성능에 영향을 줄 수 있으므로~</p><p><code>활성상태보기</code> 에서 백업 담당 프로세스가 뭘까 찾아보니, backupd 인거 같았다.<br>이친구의 PID 는 내꺼에서는 261 이다</p><img src="/blog/2020/10/23/mac-backup-speedup/Untitled.png" class="" title="활성상태보기"><p>사진은 조치 후에 찍어서 CPU 가 80% 사용중이다.<br>조치 전에는 한 10% 썼었나..</p><p>프로세스의 현재 nice 값을 보는 방법은 아래와 같다<br>터미널을 열어서 때려본다</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ps -fl -C 261</span><br></pre></td></tr></table></figure><p>여기서 <code>261</code> 은 본인의 backupd 의 PID 를 넣자</p><img src="/blog/2020/10/23/mac-backup-speedup/Untitled%201.png" class="" title="ps 결과"><p>참고로 프로세스의 nice 값은 프로세스가 다른 프로세스 친구들에게 얼마나 nice 한지를 설정하는 값이다.<br>다른 친구들에게 nice 한 프로세스는 자꾸 CPU 를 너 먼저 쓰세요~ 하고 양보한다.<br>이 값은 -20 ~ 20 사이로 설정이 가능한데, -20 이 안 nice 한 값이다.</p><p>암튼 이 backupd 프로세스를 완전 이기주의 프로세스로 만들어주자</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo renice -n -20 -p 261</span><br></pre></td></tr></table></figure><p>backupd 는 이제 완전 극악무도한 CPU 탐욕덩어리가 되었다.<br>다시한번 <code>활성상태보기</code> 를 들어가서 CPU 사용률이 올라간것을 확인하자.<br>사진은.. 위에 이미 찍었다.<br>(원체 우선순위가 낮아서 그런지 막 200% 먹고 그러지는 않는군)</p><p>그리고 타임머신 백업의 시간이 단축된것도 확인해보자 ㅎㅎ<br>내 경우엔 15시간에서 5시간으로 줄었네?? (더 줄이고 싶지만 오늘은 그냥 넘어가준다)</p><img src="/blog/2020/10/23/mac-backup-speedup/Untitled%202.png" class="" title="타임머신"><h4 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h4><ul><li><a href="https://www.techrepublic.com/article/how-to-adjust-cpu-priority-using-apples-terminal/">https://www.techrepublic.com/article/how-to-adjust-cpu-priority-using-apples-terminal/</a></li></ul>]]></content:encoded>
+      
+      
+      
+      <category domain="https://humbledude.github.io/blog/tags/mac/">mac</category>
+      
+      
+      <comments>https://humbledude.github.io/blog/2020/10/23/mac-backup-speedup/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Python 실전 개발 생태계</title>
