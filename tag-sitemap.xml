@@ -3,6 +3,20 @@
 
 
     <url>
+        <loc>https://humbledude.github.io/blog/tags/instruction-set/</loc>
+        <lastmod>2021-03-31T07:14:38.888Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://humbledude.github.io/blog/tags/%25EC%25BB%25B4%25ED%2593%25A8%25ED%2584%25B0%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4/</loc>
+        <lastmod>2021-03-31T07:14:38.888Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://humbledude.github.io/blog/tags/pyenv/</loc>
         <lastmod>2021-03-31T07:05:26.449Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -82,20 +96,6 @@
     <url>
         <loc>https://humbledude.github.io/blog/tags/mysql/</loc>
         <lastmod>2020-10-13T13:26:39.847Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://humbledude.github.io/blog/tags/%25EC%25BB%25B4%25ED%2593%25A8%25ED%2584%25B0%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4-instruction-set/</loc>
-        <lastmod>2020-10-13T13:26:39.834Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://humbledude.github.io/blog/tags/%25EC%25BB%25B4%25ED%2593%25A8%25ED%2584%25B0%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4/</loc>
-        <lastmod>2020-10-13T13:26:39.833Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
