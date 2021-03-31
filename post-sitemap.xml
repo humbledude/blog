@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://humbledude.github.io/blog/2021/03/31/pyenv-experiment/</loc>
+        <lastmod>2021-03-31T07:05:26.449Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/</loc>
         <lastmod>2020-10-23T08:45:32.565Z</lastmod>
         <changefreq>weekly</changefreq>
