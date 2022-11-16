@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="쿠버네티스에서 스파크를 돌려볼까 한다.kubernetes 는 좀 할줄 아는 사람, spark 완전 초보를 대상으로 글을 썼다.내가 오늘 처음 Spark 를 돌려봤기에..모든 bash command 는 spark 설치 루트 디렉토리 기준이다. 환경로컬 : Mac, mojave 10.14Kubernetes : 1.9, RBAC enabledSpark : 2.4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes 에서 Spark 돌려보기">
+<meta property="og:url" content="https://humbledude.github.io/blog/2018/12/01/spark-on-kube/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="쿠버네티스에서 스파크를 돌려볼까 한다.kubernetes 는 좀 할줄 아는 사람, spark 완전 초보를 대상으로 글을 썼다.내가 오늘 처음 Spark 를 돌려봤기에..모든 bash command 는 spark 설치 루트 디렉토리 기준이다. 환경로컬 : Mac, mojave 10.14Kubernetes : 1.9, RBAC enabledSpark : 2.4">
+<meta property="og:locale">
+<meta property="og:image" content="https://spark.apache.org/docs/latest/img/k8s-cluster-mode.png">
+<meta property="article:published_time" content="2018-12-01T13:48:04.000Z">
+<meta property="article:modified_time" content="2022-11-07T07:13:47.417Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="spark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://spark.apache.org/docs/latest/img/k8s-cluster-mode.png">
+    
+    <link rel="canonical" href="/blog/2018/12/01/spark-on-kube/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Kubernetes 에서 Spark 돌려보기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/blog/2018/12/10/csforhuman-3/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/blog/2018/11/27/csforhuman-2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&text=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&is_video=false&description=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes 에서 Spark 돌려보기&body=Check out this article: https://humbledude.github.io/blog/2018/12/01/spark-on-kube/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&name=Kubernetes 에서 Spark 돌려보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%99%98%EA%B2%BD"><span class="toc-number">1.</span> <span class="toc-text">환경</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9D%BC%EB%8B%A8-%EB%A1%9C%EC%BB%AC-mac-%EC%97%90%EC%84%9C-standalone-%EC%9C%BC%EB%A1%9C-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">일단 로컬 mac 에서 standalone 으로 돌려보기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mac-%EC%97%90-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0"><span class="toc-number">2.1.</span> <span class="toc-text">mac 에 설치하기</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mac-%EC%97%90%EC%84%9C-spark-%EC%98%88%EC%A0%9C-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">2.2.</span> <span class="toc-text">mac 에서 spark 예제 돌려보기</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9D%B4%EC%A0%9C-kubernetes%EC%97%90%EC%84%9C-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0%EB%A1%9C-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">3.</span> <span class="toc-text">이제 kubernetes에서 클러스터로 돌려보기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B7%B8%EC%A0%84%EC%97%90-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B9%8C%EB%93%9C"><span class="toc-number">3.1.</span> <span class="toc-text">그전에 이미지 빌드</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RBAC-%EC%84%A4%EC%A0%95"><span class="toc-number">3.2.</span> <span class="toc-text">RBAC 설정</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#namespace-yml"><span class="toc-number">3.2.1.</span> <span class="toc-text">namespace.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#serviceaccount-yml"><span class="toc-number">3.2.2.</span> <span class="toc-text">serviceaccount.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#role-yml"><span class="toc-number">3.2.3.</span> <span class="toc-text">role.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rolebinding-yml"><span class="toc-number">3.2.4.</span> <span class="toc-text">rolebinding.yml</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A7%84%EC%A7%9C%EB%A1%9C-%EC%98%88%EC%A0%9C-%EB%8F%8C%EB%A6%AC%EA%B8%B0"><span class="toc-number">4.</span> <span class="toc-text">진짜로 예제 돌리기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%ED%83%80-%EC%82%BD%EC%A7%88%EB%93%A4"><span class="toc-number">5.</span> <span class="toc-text">기타 삽질들..</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%BD%EC%A7%88-1"><span class="toc-number">5.1.</span> <span class="toc-text">삽질 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%BD%EC%A7%88-2"><span class="toc-number">5.2.</span> <span class="toc-text">삽질 2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">6.</span> <span class="toc-text">참고</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B3%B5%EC%8B%9D-%EB%AC%B8%EC%84%9C"><span class="toc-number">6.1.</span> <span class="toc-text">공식 문서</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-0-what%E2%80%99s-new-%EB%B8%94%EB%A1%9C%EA%B7%B8"><span class="toc-number">6.2.</span> <span class="toc-text">2.4.0 what’s new 블로그</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Kubernetes 에서 Spark 돌려보기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-12-01T13:48:04.000Z" itemprop="datePublished">2018-12-01</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/kubernetes/" rel="tag">kubernetes</a>, <a class="tag-link-link" href="/blog/tags/spark/" rel="tag">spark</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>쿠버네티스에서 스파크를 돌려볼까 한다.<br>kubernetes 는 좀 할줄 아는 사람, spark 완전 초보를 대상으로 글을 썼다.<br>내가 오늘 처음 Spark 를 돌려봤기에..<br>모든 bash command 는 spark 설치 루트 디렉토리 기준이다.</p>
+<h2 id="환경"><a href="#환경" class="headerlink" title="환경"></a>환경</h2><p>로컬 : Mac, mojave 10.14<br>Kubernetes : 1.9, RBAC enabled<br>Spark : 2.4.0</p>
+<h2 id="일단-로컬-mac-에서-standalone-으로-돌려보기"><a href="#일단-로컬-mac-에서-standalone-으로-돌려보기" class="headerlink" title="일단 로컬 mac 에서 standalone 으로 돌려보기"></a>일단 로컬 mac 에서 standalone 으로 돌려보기</h2><h3 id="mac-에-설치하기"><a href="#mac-에-설치하기" class="headerlink" title="mac 에 설치하기"></a>mac 에 설치하기</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brew install apache-spark</span><br></pre></td></tr></table></figure>
+<p>로 깔아도 되지만.. 이렇게 설치하면 테스트해볼 example 이 없다..<br>그래서 그냥 <a target="_blank" rel="noopener" href="https://spark.apache.org/downloads.html">다운로드 페이지</a>에서 tar 받아서 압축 푼다.</p>
+<h3 id="mac-에서-spark-예제-돌려보기"><a href="#mac-에서-spark-예제-돌려보기" class="headerlink" title="mac 에서 spark 예제 돌려보기"></a>mac 에서 spark 예제 돌려보기</h3><p>제일 간단하게 python pi 예제  돌려보는 커맨드<br>(결과가 log 사이에 섞여서 나온다.)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bin&#x2F;spark-submit examples&#x2F;src&#x2F;main&#x2F;python&#x2F;pi.py</span><br></pre></td></tr></table></figure>
+
+<p>워드카운트 예제도 돌려본다.<br>(arguments를 받을 수 있다는걸 배웠다.)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bin&#x2F;spark-submit examples&#x2F;src&#x2F;main&#x2F;python&#x2F;wordcount.py README.md</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="이제-kubernetes에서-클러스터로-돌려보기"><a href="#이제-kubernetes에서-클러스터로-돌려보기" class="headerlink" title="이제 kubernetes에서 클러스터로 돌려보기"></a>이제 kubernetes에서 클러스터로 돌려보기</h2><h3 id="그전에-이미지-빌드"><a href="#그전에-이미지-빌드" class="headerlink" title="그전에 이미지 빌드"></a>그전에 이미지 빌드</h3><p>kubernetes에서 spark 를 돌리려면, pods 를 생성할 base docker image 가 필요하다.<br>요렇게 해서 한번 만들어 보자</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bin&#x2F;docker-image-tool.sh build</span><br></pre></td></tr></table></figure>
+
+<p><code>docker images</code>로 확인해보면 이미지가 세개 만들어져 있다.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">REPOSITORY     TAG                  IMAGE ID            CREATED             SIZE</span><br><span class="line">spark-r        latest               76831d4bc63c        5 days ago          764MB</span><br><span class="line">spark-py       latest               ec2d882c5f8a        5 days ago          438MB</span><br><span class="line">spark          latest               90cf7bdaee92        5 days ago          348MB</span><br></pre></td></tr></table></figure>
+
+<p>아 이미지가 개발 언어마다 다른가보다..<br>참고로 이 이미지를 만드는 <code>dockerfile</code> 은 여기 있다.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kubernetes&#x2F;dockerfiles&#x2F;spark</span><br></pre></td></tr></table></figure>
+<p>(spark-r 과 spark-py 용 dockerfile 은  그 아래 <code>bindings</code> 를 뒤져보면 각각 dockerfile 이 나온다.)</p>
+<p>docker image 안에 필요한 파일을 다 넣고 이미지를 만들어야 한다.<br>application 도 이미지 안에 넣어두어야 하는데, 로컬에 있는 application 을 kubernetes 로 바로 전송하면서 실행하는 모드는 아직 없다고 한다.<br>(네트워크에서 접근 가능한  링크로 제공하는건 괜찮다고 한다.)</p>
+<p>이렇게 만든 이미지는 kubernetes 가 pods 를 만들때 끌어다 쓸 수 있는 docker registry 에 올려 두자<br>나는 docker 커맨드를 사용했지만, docker-image-tool.sh 의 옵션으로도 제공한다.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bin&#x2F;docker-image-tool.sh -r docker.io&#x2F;myrepo -t v2.3.0 build</span><br><span class="line">bin&#x2F;docker-image-tool.sh -r docker.io&#x2F;myrepo -t v2.3.0 push</span><br></pre></td></tr></table></figure>
+<p>-r 옵션으로 registry 를 지정하고<br>-t 옵션으로 tag 를 지정하자</p>
+<h3 id="RBAC-설정"><a href="#RBAC-설정" class="headerlink" title="RBAC 설정"></a>RBAC 설정</h3><p>알고보니 내가 쓰는 클러스터는 RBAC 가 enable 되어있었다.<br>일단 spark-submit 을 kubernetes 에다가 때리면, driver 라는 pod 가 생기고, 이놈이 다른 executor pods 를 만든다.</p>
+<img src="https://spark.apache.org/docs/latest/img/k8s-cluster-mode.png" class="" title="출처 : 공식 홈페이지">
+
+<p>그런데 pod 주제에 다른 pods 를 만들려면 권한이 있어야 하는거다.<br>그래서 권한 셋팅을 한다.<br>(나는 어쩌다보니 namespace 까지 설정 해버렸다.. namespace 는 default 로 해도 되겠더라)</p>
+<h4 id="namespace-yml"><a href="#namespace-yml" class="headerlink" title="namespace.yml"></a>namespace.yml</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kind: Namespace</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: spark</span><br><span class="line">  labels:</span><br><span class="line">    name: spark</span><br></pre></td></tr></table></figure>
+
+<h4 id="serviceaccount-yml"><a href="#serviceaccount-yml" class="headerlink" title="serviceaccount.yml"></a>serviceaccount.yml</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kind: ServiceAccount</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: spark</span><br><span class="line">  name: spark</span><br></pre></td></tr></table></figure>
+
+<h4 id="role-yml"><a href="#role-yml" class="headerlink" title="role.yml"></a>role.yml</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io&#x2F;v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: spark</span><br><span class="line">  name: spark-role</span><br><span class="line">rules:</span><br><span class="line">  - apiGroups: [&quot;&quot;]</span><br><span class="line">    resources: [&quot;pods&quot;]</span><br><span class="line">    verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;]</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="rolebinding-yml"><a href="#rolebinding-yml" class="headerlink" title="rolebinding.yml"></a>rolebinding.yml</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io&#x2F;v1</span><br><span class="line">metadata:</span><br><span class="line">  name: spark-rolebinding</span><br><span class="line">  namespace: spark</span><br><span class="line">subjects:</span><br><span class="line">  - kind: ServiceAccount</span><br><span class="line">    name: spark</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: spark-role</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure>
+
+
+<p>파일이 많아서 혼미한데, 이게 뭔소리냐면,</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">spark 네임스페이스 아래에서 이 모든 일이 일어날 것인데,</span><br><span class="line">	spark-rolebinding 에 적혀있기를,</span><br><span class="line">		spark 서비스 어카운트 님은</span><br><span class="line"> 		spark-role 롤을 가질 것이다.</span><br></pre></td></tr></table></figure>
+
+<h2 id="진짜로-예제-돌리기"><a href="#진짜로-예제-돌리기" class="headerlink" title="진짜로 예제 돌리기"></a>진짜로 예제 돌리기</h2><p>이렇게 셋팅을 하고 아래와 같이 예제를 돌린다</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bin&#x2F;spark-submit \</span><br><span class="line">	-—master k8s:&#x2F;&#x2F;https:&#x2F;&#x2F;KUBERNETES_MASTER_NODE:PORT \</span><br><span class="line">	--deploy-mode cluster \</span><br><span class="line">	--name spark-pi \</span><br><span class="line">	--class org.apache.spark.examples.SparkPi \</span><br><span class="line">	--conf spark.executor.instances&#x3D;2 \</span><br><span class="line">	—-conf spark.kubernetes.namespace&#x3D;spark \</span><br><span class="line">	—-conf spark.kubernetes.authenticate.driver.serviceAccountName&#x3D;spark \</span><br><span class="line">	--conf spark.kubernetes.container.image&#x3D;humbledude&#x2F;spark \</span><br><span class="line">	local:&#x2F;&#x2F;&#x2F;opt&#x2F;spark&#x2F;examples&#x2F;jars&#x2F;spark-examples_2.11-2.4.0.jar</span><br></pre></td></tr></table></figure>
+
+<p>local:// 부터는 docker image 안에서 application 의 위치를 지정해준다.<br>내 pc에 있는걸 바로 돌리는건 아직 안된다고 한다.</p>
+<p>옵션은 이렇게 동작한다.</p>
+<ul>
+<li><code>--master</code> : 쿠버네티스 마스터 노드, k8s://로 시작하면 된다. (kubectl cluster-info 로 알수 있다)</li>
+<li><code>--deploy-mode</code> : cluster / client 모드가 있다.<ul>
+<li>cluster 모드는 쿠버네티스 상에 application 을 돌리기 위해 driver 와 executor  를 다 알아서 생성하고 정리하는 모드이다.</li>
+<li>client 모드는 spark-shell 이나 notebook 처럼 interactive 모드로 작업하기 위한 모드라 한다. (별도 옵션으로 server / port 를 지정해 줘야 한다)</li>
+</ul>
+</li>
+<li><code>--name</code> : 이름이다. pod 이름이 이거 기반으로 생성된다.</li>
+<li><code>—-class</code> : jar 파일 내 실행 클래스</li>
+<li><code>—-conf spark.executor.instances</code> : executor 갯수이다. 쿠버네티스 클러스터에서 감당 못하는 숫자를 넣으면 어떻게 되는지 아직 안해봤다.</li>
+<li><code>—-conf spark.kubernetes.authenticate.driver.serviceAccountName</code> : 위에서 만든 serveice account 를 넣는다. 이 account 가 적절한 권한이 있어야 한다.</li>
+<li><code>—-conf spark.kubernetes.namespace</code> : 위에서 만든 namespace 를 넣는다. namespace 를 따로 안만들고 default 로 했으면, 이 옵션이 필요가 없다.</li>
+<li><code>—-conf spark.kubernetes.container.image</code> : 위에서 만든 docker image 위치를 넣는다. 쿠버네티스에서 접근 가능한 위치에 image 가 있어야겠지?</li>
+</ul>
+<p>python 도 돌려보자</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">spark-submit \</span><br><span class="line">	-—master k8s:&#x2F;&#x2F;https:&#x2F;&#x2F;KUBERNETES_MASTER_NODE:PORT \</span><br><span class="line">	--deploy-mode cluster \</span><br><span class="line">	--name spark-py-pi \</span><br><span class="line">	--conf spark.executor.instances&#x3D;2</span><br><span class="line">	--conf spark.kubernetes.namespace&#x3D;spark</span><br><span class="line">	--conf spark.kubernetes.authenticate.driver.serviceAccountName&#x3D;spark \</span><br><span class="line">	--conf spark.kubernetes.container.image&#x3D;humbledude&#x2F;spark-py \</span><br><span class="line">	local:&#x2F;&#x2F;&#x2F;opt&#x2F;spark&#x2F;examples&#x2F;src&#x2F;main&#x2F;python&#x2F;pi.py</span><br></pre></td></tr></table></figure>
+<p>별거 없고, image 만 교체하고, <code>—-class</code>  만 뺐다.<br>잘돈다.</p>
+<p>결과는 <code>kubectl logs PODS</code> 으로 본다.<br>(example 이니까 결과가 로그에 나오는걸로..)</p>
+<h2 id="기타-삽질들"><a href="#기타-삽질들" class="headerlink" title="기타 삽질들.."></a>기타 삽질들..</h2><h3 id="삽질-1"><a href="#삽질-1" class="headerlink" title="삽질 1"></a>삽질 1</h3><p>얼마전엔 brew 로 spark 인스톨 했더니 <code>2.3.2</code> 가 깔리고,<br>image build 는 홈페이지에 받은 <code>2.4.0</code> tar 파일 압축푼 디렉토리에서 했더니 application 을 돌릴수가 없었다.<br><code>2.3.2</code>/ <code>2.4.0</code> 두 버전간 호환이 안되니, 잘 맞춰서 하자</p>
+<h3 id="삽질-2"><a href="#삽질-2" class="headerlink" title="삽질 2"></a>삽질 2</h3><p><code>2.3.2</code> 에서 python 돌릴라고 했더니 쿠버네티스에서는 python 안된다고 떴었다.<br><code>2.4.0</code> 에서는 잘 돌았다.</p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><h3 id="공식-문서"><a href="#공식-문서" class="headerlink" title="공식 문서"></a>공식 문서</h3><p><a target="_blank" rel="noopener" href="https://spark.apache.org/docs/latest/running-on-kubernetes.html">https://spark.apache.org/docs/latest/running-on-kubernetes.html</a></p>
+<h3 id="2-4-0-what’s-new-블로그"><a href="#2-4-0-what’s-new-블로그" class="headerlink" title="2.4.0 what’s new 블로그"></a>2.4.0 what’s new 블로그</h3><p><a target="_blank" rel="noopener" href="https://databricks.com/blog/2018/09/26/whats-new-for-apache-spark-on-kubernetes-in-the-upcoming-apache-spark-2-4-release.html">https://databricks.com/blog/2018/09/26/whats-new-for-apache-spark-on-kubernetes-in-the-upcoming-apache-spark-2-4-release.html</a></p>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%99%98%EA%B2%BD"><span class="toc-number">1.</span> <span class="toc-text">환경</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9D%BC%EB%8B%A8-%EB%A1%9C%EC%BB%AC-mac-%EC%97%90%EC%84%9C-standalone-%EC%9C%BC%EB%A1%9C-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">일단 로컬 mac 에서 standalone 으로 돌려보기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mac-%EC%97%90-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0"><span class="toc-number">2.1.</span> <span class="toc-text">mac 에 설치하기</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mac-%EC%97%90%EC%84%9C-spark-%EC%98%88%EC%A0%9C-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">2.2.</span> <span class="toc-text">mac 에서 spark 예제 돌려보기</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9D%B4%EC%A0%9C-kubernetes%EC%97%90%EC%84%9C-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0%EB%A1%9C-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">3.</span> <span class="toc-text">이제 kubernetes에서 클러스터로 돌려보기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B7%B8%EC%A0%84%EC%97%90-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B9%8C%EB%93%9C"><span class="toc-number">3.1.</span> <span class="toc-text">그전에 이미지 빌드</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RBAC-%EC%84%A4%EC%A0%95"><span class="toc-number">3.2.</span> <span class="toc-text">RBAC 설정</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#namespace-yml"><span class="toc-number">3.2.1.</span> <span class="toc-text">namespace.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#serviceaccount-yml"><span class="toc-number">3.2.2.</span> <span class="toc-text">serviceaccount.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#role-yml"><span class="toc-number">3.2.3.</span> <span class="toc-text">role.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rolebinding-yml"><span class="toc-number">3.2.4.</span> <span class="toc-text">rolebinding.yml</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A7%84%EC%A7%9C%EB%A1%9C-%EC%98%88%EC%A0%9C-%EB%8F%8C%EB%A6%AC%EA%B8%B0"><span class="toc-number">4.</span> <span class="toc-text">진짜로 예제 돌리기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%ED%83%80-%EC%82%BD%EC%A7%88%EB%93%A4"><span class="toc-number">5.</span> <span class="toc-text">기타 삽질들..</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%BD%EC%A7%88-1"><span class="toc-number">5.1.</span> <span class="toc-text">삽질 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%BD%EC%A7%88-2"><span class="toc-number">5.2.</span> <span class="toc-text">삽질 2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">6.</span> <span class="toc-text">참고</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B3%B5%EC%8B%9D-%EB%AC%B8%EC%84%9C"><span class="toc-number">6.1.</span> <span class="toc-text">공식 문서</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-0-what%E2%80%99s-new-%EB%B8%94%EB%A1%9C%EA%B7%B8"><span class="toc-number">6.2.</span> <span class="toc-text">2.4.0 what’s new 블로그</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&text=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&is_video=false&description=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes 에서 Spark 돌려보기&body=Check out this article: https://humbledude.github.io/blog/2018/12/01/spark-on-kube/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&title=Kubernetes 에서 Spark 돌려보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2018/12/01/spark-on-kube/&name=Kubernetes 에서 Spark 돌려보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>

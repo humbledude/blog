@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="회사에서 batch scheduler 로 Airflow 를 사용할 일이 있었다.나는 Kuberentes 를 공부하고자 하는 의도로 겸사겸사 Airflow 를 Kubernetes 위에서 운용하려고 했다.당시 때마침 Airflow 의 Kubernetes 지원이 시작되고 있어서 삽질을 시작해 보았다.다행히 구성에 성공하여 약 3개월간 큰 이슈없이 사용하고 있으니">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes 위에서 Airflow 사용하기">
+<meta property="og:url" content="https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="회사에서 batch scheduler 로 Airflow 를 사용할 일이 있었다.나는 Kuberentes 를 공부하고자 하는 의도로 겸사겸사 Airflow 를 Kubernetes 위에서 운용하려고 했다.당시 때마침 Airflow 의 Kubernetes 지원이 시작되고 있어서 삽질을 시작해 보았다.다행히 구성에 성공하여 약 3개월간 큰 이슈없이 사용하고 있으니">
+<meta property="og:locale">
+<meta property="og:image" content="https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/layout.png">
+<meta property="article:published_time" content="2019-07-11T15:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-07T07:13:47.398Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="airflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/layout.png">
+    
+    <link rel="canonical" href="/blog/2019/07/12/airflow-on-k8s/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Kubernetes 위에서 Airflow 사용하기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/blog/2019/08/22/python-dev-env/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/blog/2019/02/27/basic-data-analysis/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&text=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&is_video=false&description=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes 위에서 Airflow 사용하기&body=Check out this article: https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&name=Kubernetes 위에서 Airflow 사용하기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B5%AC%EC%84%B1"><span class="toc-number">1.</span> <span class="toc-text">구성</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-image"><span class="toc-number">1.1.</span> <span class="toc-text">docker image</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#airflow-cfg"><span class="toc-number">1.2.</span> <span class="toc-text">airflow.cfg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s-%EA%B5%AC%EC%84%B1-helm"><span class="toc-number">1.3.</span> <span class="toc-text">k8s 구성 (helm)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ClusterRoleBinding"><span class="toc-number">1.3.1.</span> <span class="toc-text">ClusterRoleBinding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment"><span class="toc-number">1.3.2.</span> <span class="toc-text">Deployment</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ConfigMap"><span class="toc-number">1.3.3.</span> <span class="toc-text">ConfigMap</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%8B%A4%EB%B3%B4%EB%8B%88"><span class="toc-number">2.</span> <span class="toc-text">사용하다보니..</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dag-%EC%A0%80%EC%9E%A5%EC%86%8C-%EA%B5%AC%EC%84%B1"><span class="toc-number">2.1.</span> <span class="toc-text">dag 저장소 구성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parallelism-vs-dag-concurrncy-vs-max-active-runs"><span class="toc-number">2.2.</span> <span class="toc-text">parallelism vs dag_concurrncy vs max_active_runs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%ED%83%80"><span class="toc-number">3.</span> <span class="toc-text">기타</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Kubernetes 위에서 Airflow 사용하기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-07-11T15:00:00.000Z" itemprop="datePublished">2019-07-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/airflow/" rel="tag">airflow</a>, <a class="tag-link-link" href="/blog/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>회사에서 batch scheduler 로 Airflow 를 사용할 일이 있었다.<br>나는 Kuberentes 를 공부하고자 하는 의도로 겸사겸사 Airflow 를 Kubernetes 위에서 운용하려고 했다.<br>당시 때마침 Airflow 의 Kubernetes 지원이 시작되고 있어서 삽질을 시작해 보았다.<br>다행히 구성에 성공하여 약 3개월간 큰 이슈없이 사용하고 있으니 성공이라 해야 하나..</p>
+<p>내가 사용한 버전은 1.10.2 버전이다.</p>
+<h2 id="구성"><a href="#구성" class="headerlink" title="구성"></a>구성</h2><p>공식? 설치 가이드는 여기에 있다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apache/airflow/tree/master/scripts/ci/kubernetes">https://github.com/apache/airflow/tree/master/scripts/ci/kubernetes</a></p>
+<p>kube/deploy.sh 를 실행시키면 되는 구조인데, 스크립트를 열어보면 별로 실행시키고 싶지가 않다..<br>보통 kubernetes 배포라면 helm 이라든지 툴이 많은데, 이걸 직접 template 만들고 shell script 로 쓰다니.. ㅠㅠ</p>
+<p>Airflow Helm Chart 는 여기에 있다. 공식 chart 인지는 모르겠지만..</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/helm/charts/tree/master/stable/airflow">https://github.com/helm/charts/tree/master/stable/airflow</a></p>
+<p>근데 이건 기존의 Celery 구성을 그대로 Kubernetes 에 올리는 설정이라, 새로 개발된 Kubernetes Executor 를 사용하지 않았다.<br>Kubernetes native 라면 필요할때 executor 가 올라가서 필요한 만큼만의 resource 를 사용해야 하는데, Celery 가 상주해있는 모양은 k8s native 답지 않아 보였다.  이에 따라 Kubernetes native Airflow 의 Helm chart 를 작성하기에 이르렀다.. (삽질의 시작)</p>
+<p>여러 삽질 끝에 Kubernetes native Airflow 를 쓰려면 아래와 같은 구성이 필요함을 깨달았다.</p>
+<ul>
+<li>DB (MySql or Postgresql 등) - 각종 상태 저장</li>
+<li>Airflow Webserver - web ui 를 호스팅한다, <code>airflow webserver</code> 명령어로 실행</li>
+<li>Airflow Scheduler - webserver 등 에서 지시를 받아 실제 job 을 스케쥴링 (실행) 한다, <code>airflow scheduler</code> 명령어로 실행</li>
+<li>dag 를 저장할 storage</li>
+<li>그리고 잘.. 설정된 <code>airflow.cfg</code> 설정파일과 docker image, kubernetes 설정</li>
+<li>보너스로 log 를 저장할 s3 저장소</li>
+</ul>
+<p>대략적인 구성이 아래와 같이 잡힌다.</p>
+<img src="/blog/2019/07/12/airflow-on-k8s/layout.png" class="" title="레이아웃">
+
+<ul>
+<li>dag 는 Github 에 저장하고, 필요할때마다 git pull 해온다.<ul>
+<li>airflow pod 안에 git-sync 컨테이너를 두어 주기적으로 git pull 을 하게 하고, 나머지 webserver,  scheduler 에서는 dag 를 read only 로 사용한다.</li>
+</ul>
+</li>
+<li>airflow 가 <code>KubernetesExecutor</code> 를 사용하게 되면, task 마다 별도의 worker pod 를 실행해서 task 를 실행하게 된다.<ul>
+<li>task 가 <code>KubernetesPodOperator</code> 를 사용해서 구성되어있다면, <code>KubernetesExecutor</code> 는 또 pod 를 생성해서 거기서 작업을 실행한다.</li>
+<li>task 가 그외의 Operator 를 사용한다면, <code>KubernetesExecutor</code> pod 안에서 해당 작업 (예를 들어 <code>SimpleHttpOperator</code> 등) 이 실행된다.</li>
+</ul>
+</li>
+<li>airflow 를 포함하는 docker image 는 webserver, scheduler, worker 가 같은 이미지를 사용하게 된다.<ul>
+<li>물론 설정을 하다보면 다 다른 이미지를 쓰게 설정이 가능한 구조이지만.. 다르게 할 필요가 있을까?</li>
+</ul>
+</li>
+<li>log 의 경우, <code>KuberentesExecutor</code> 가 각각 생겼다가 사라지기 때문에 어딘가 별도로 저장하지 않으면 이력 추적이 불가하다. 다행히 Airflow 는 log backend 로 s3 를 지원한다.<ul>
+<li>근데 회사에서는 s3 를 쓰기 어려워서 minio 를 따로 띄웠다. minio 의 정보는 여기서 얻어보자. (<a target="_blank" rel="noopener" href="https://min.io/">https://min.io/</a>)</li>
+<li>각각의 <code>KubernetesExecutor</code> 가 직접 s3 에 log 를 저장하는건지, 아니면 scheduler 등을 통해서 저장하는지는 잘 모르겠다.</li>
+</ul>
+</li>
+</ul>
+<p>그러면 실제 설정 파일을 어떻게 했는지 하나씩 소개해본다.</p>
+<h3 id="docker-image"><a href="#docker-image" class="headerlink" title="docker image"></a>docker image</h3><p>현재 (2019-07) 기준 airflow 는 2.x 가 개발중이고, 1.10.x 에는 막바지에 Kubernetes 관련 기능이 구현 되었다.<br>그래서 현재 stable 한 1.10.x 브랜치에서는 docker image 부분이 좀 빈약한데, 그냥 master 브랜치에서 docker image 부분을 퍼와서 써봤다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/humbledude/airflow/blob/v1-10-stable/Dockerfile">https://github.com/humbledude/airflow/blob/v1-10-stable/Dockerfile</a></p>
+<p>현재의 master branch 의 Dockerfile 과는 좀 거리가 있지만 그때는 심플하니 좋았다<br>그리고 entrypoint.sh 도 어디선가 적당히 가져다 썼다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/humbledude/airflow/blob/v1-10-stable/scripts/docker/entrypoint.sh">https://github.com/humbledude/airflow/blob/v1-10-stable/scripts/docker/entrypoint.sh</a></p>
+<p>docker image 는 그냥 airflow 전체 dependency 를 설치한 그런 image 이다.</p>
+<h3 id="airflow-cfg"><a href="#airflow-cfg" class="headerlink" title="airflow.cfg"></a>airflow.cfg</h3><p>airflow.cfg 는 회사에서 필요에 의해 개발하다 보니, 전용 설정이 많아서 전체를 그대로 소개하긴 어렵고, kubernetes native 로 쓰기위해 설정한 부분을 소개한다.<br>이 airflow.cfg 는 helm chart 에서 가져다 쓰기 때문에, templating 문법이 좀 있는데, 그러려니 하자</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[core]</span><br><span class="line"></span><br><span class="line"># executor 를 KubernetesExecutor 로 해야 task 마다 worker pod 를 생성한다</span><br><span class="line">executor &#x3D; KubernetesExecutor</span><br><span class="line"></span><br><span class="line">[kubernetes]</span><br><span class="line"></span><br><span class="line"># worker 가 사용할 image 를 지정하는 부분이다. 각자 만든 이미지를 쓰자. 내꺼는 사설 repo 에 있음.</span><br><span class="line">worker_container_repository &#x3D; &#123;&#123; .Values.image.worker.repo &#125;&#125;</span><br><span class="line">worker_container_tag &#x3D; &#123;&#123; .Values.image.worker.tag &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 처음에 debugging 할때 여기를 False 로 해두면, worker pod 가 종료 된 후에 삭제 되지 않아서 log 등을 참조할 수 있다</span><br><span class="line">delete_worker_pods &#x3D; True</span><br><span class="line"></span><br><span class="line"># airflow.cfg 를 configmap 에 등록하고 그걸 가져다 쓰게 한다. 그러면 각종 airflow pod 에서 가져다 쓰기 쉽다.</span><br><span class="line">airflow_configmap &#x3D; airflow-configmap</span><br><span class="line"></span><br><span class="line"># worker (Kubernetes Executor) 가 뜰때, dag 를 어디서 가져오게 할것인지 골라야 하는데,</span><br><span class="line"># 나는 git 에서 직접 땡겨오라고 했다. nfs 등을 쓸 수 있지만 잘 안되었어서..</span><br><span class="line"># 그 worker 가 쓸 git 정보이다.</span><br><span class="line">git_repo &#x3D; &#123;&#123; .Values.github.repo &#125;&#125;</span><br><span class="line">git_branch &#x3D; &#123;&#123; .Values.github.branch &#125;&#125;</span><br><span class="line">git_user &#x3D; &#123;&#123; .Values.github.username &#125;&#125;</span><br><span class="line">git_password &#x3D; &#123;&#123; .Values.github.token &#125;&#125;</span><br><span class="line">git_sync_dest &#x3D; &#123;&#123; include &quot;github.repo&quot; . &#125;&#125;</span><br><span class="line">git_dags_folder_mount_point &#x3D; &#123;&#123; include &quot;config.dir.dags-repo&quot; . &#125;&#125;</span><br><span class="line">git_subpath &#x3D;</span><br><span class="line"></span><br><span class="line"># worker 가 git 을 땡겨올때 git command 를 따로 image 에 넣지 않고, git-sync 라는 image 를 써서 땡겨온다</span><br><span class="line">git_sync_container_repository &#x3D; k8s.gcr.io&#x2F;git-sync</span><br><span class="line">git_sync_container_tag &#x3D; v3.1.1</span><br><span class="line">git_sync_init_container_name &#x3D; git-sync-clone</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="k8s-구성-helm"><a href="#k8s-구성-helm" class="headerlink" title="k8s 구성 (helm)"></a>k8s 구성 (helm)</h3><p>k8s 구성 또한 전용 설정이 많아 그대로 소개하긴 어렵다 ㅜㅜ<br>혹시나 요청이 있다면 정리해볼지도..<br>기본 틀은 여기를 참고했다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apache/airflow/tree/v1-10-stable/scripts/ci/kubernetes/kube">https://github.com/apache/airflow/tree/v1-10-stable/scripts/ci/kubernetes/kube</a></p>
+<p>shell 로 직접 구현한 템플레이팅을 거의 그대로 helm 으로 가져다 썼다.</p>
+<h4 id="ClusterRoleBinding"><a href="#ClusterRoleBinding" class="headerlink" title="ClusterRoleBinding"></a>ClusterRoleBinding</h4><ul>
+<li>Airflow pod 에서 각종 다른 pod 를 생성하기 위해 권한이 필요하다.<ul>
+<li><code>cluster-admin</code> 이라는 ClusterRole 에 바인딩 하는데, 이 <code>cluster-admin</code> 은 문서에 의하면 k8s의 super user 란다. 혹시 너무 큰 권한이 부담스럽다면 다른 pod 를 생성할 수 있는 별도의 role 을 구성해야겠다.</li>
+</ul>
+</li>
+</ul>
+<h4 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/airflow/blob/b8a03005c374e2e1e96847e8f6d4cb6e9f1364a4/scripts/ci/kubernetes/kube/templates/airflow.template.yaml#L44">원본</a>은 <code>initContainer</code> 에서 <code>tmp/airflow-test-env-init.sh</code> 를 하는 부분이 있는데, 이거는 뭔지 몰라서 지웠다. 아마 <code>airflow initdb</code> 커맨드를 실행할꺼 같은데, 나는 webserver 컨테이너에서 <code>airflow initdb</code> 커맨드를 실행한다.</li>
+<li>나는 <code>initContainer</code> 에서 git 에서 dag 를 한번 땡겨줬다.<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">initContainers:</span><br><span class="line">  - name: init-git</span><br><span class="line">    image: &#123;&#123; .Values.image.git.repo &#125;&#125;:&#123;&#123; .Values.image.git.tag &#125;&#125;</span><br><span class="line">    imagePullPolicy: IfNotPresent</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: airflow-dags</span><br><span class="line">      mountPath: &#x2F;tmp&#x2F;git</span><br><span class="line">    args:</span><br><span class="line">      - --repo&#x3D;&#123;&#123; template &quot;github.url&quot; . &#125;&#125;</span><br><span class="line">      - -one-time</span><br></pre></td></tr></table></figure></li>
+<li>그 외에는 동일하게 webserver 와 scheduler 의 container 를 띄운다</li>
+</ul>
+<h4 id="ConfigMap"><a href="#ConfigMap" class="headerlink" title="ConfigMap"></a>ConfigMap</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/airflow/blob/v1-10-stable/scripts/ci/kubernetes/kube/templates/configmaps.template.yaml">원본</a>은 ConfigMap 에 그냥 airflow.cfg 파일을 통째로 복붙했는데, 나는 별도 파일에서 가져다 쓰도록 했다.<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  name: airflow-configmap</span><br><span class="line">data:</span><br><span class="line">  airflow.cfg: |</span><br><span class="line">&#123;&#123; tpl (.Files.Get &quot;airflow.cfg&quot;) . | indent 4 &#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li>그 외에 ui 접근을 위한 ingress 와 db 설정을 위한 secret 이 포함되었다</li>
+</ul>
+<p>띄우는게 일이다. 띄우기만 한다면 다들 쓰는건데 동작이야 하지 않겠는가 … 쩜쩜</p>
+<h2 id="사용하다보니"><a href="#사용하다보니" class="headerlink" title="사용하다보니.."></a>사용하다보니..</h2><p>airflow dag 개발이라든지 하는 부분은 다른 블로그에서도 잘 소개하고 있으니, 그냥 사용중에 배웠던 몇몇 이슈를 적어본다.</p>
+<h3 id="dag-저장소-구성"><a href="#dag-저장소-구성" class="headerlink" title="dag 저장소 구성"></a>dag 저장소 구성</h3><p>처음 airflow 를 접했을때 난감했던 부분이, job (dag) 을 정의한 파일을 업로드 하는 기능이 없다는 거 였다.<br>dag 을 저장할 디렉토리 위치를 airflow.cfg 에서 지정하고, airflow 가 거기서 알아서 dag 를 찾아 쓰게 되어있다.<br>내가 맨 처음에 dag 저장소로 사용하려고 했던게 <code>PersistentVolume</code> 이 었는데, 하나의 nfs volume 을 띄워서 거기에 dag 를 sync 하고, webserver, scheduler, worker 에 mount 하려는 의도였다.<br>하지만 사정상 안정적인 <code>ReadWriteMany</code> volume 을 사용할 수 없었고, mount / umount 중 오류가 자주 발생했었다.</p>
+<p>그래서 그냥 pod 하나에 묶인 webserver 와 scheduler 는 하나의 volume 을 공유하게 했고, worker 는 그냥 그때그때 생길때마다 git pull 을 하는 구조로 구성했다.<br>아마 안정적으로 <code>ReadWriteMany</code> volume 을 사용할 수 있는 환경이라면 dag volume 을 하나로 쓸수 있지 않을까 싶다.</p>
+<h3 id="parallelism-vs-dag-concurrncy-vs-max-active-runs"><a href="#parallelism-vs-dag-concurrncy-vs-max-active-runs" class="headerlink" title="parallelism vs dag_concurrncy vs max_active_runs"></a>parallelism vs dag_concurrncy vs max_active_runs</h3><p>k8s cluster 상에서 동시에 돌수 있는 pod 의 숫자를 제어해야 하는 경우가 있다.<br>이때 비슷한 용어가 세개 있는데 뭘까</p>
+<p><a target="_blank" rel="noopener" href="https://airflow.apache.org/faq.html">https://airflow.apache.org/faq.html</a></p>
+<ul>
+<li><code>parallelism</code> 은 동시에 돌 수 있는 worker 의 갯수이다. airflow.cfg 에서 설정</li>
+<li><code>max_active_runs</code> 는 동시에 돌수 있는 DagRuns 의 갯수이다. dag 에서 설정</li>
+<li><code>concurrency</code> 는 동시에 돌 수 있는 task instance 의 갯수이다. dag 에서 설정</li>
+</ul>
+<p>여기서, <code>KubernetesExecutor</code> 를 사용한다면 task instance 마다 worker 가 생겨서 돌기 때문에, worker 가 사용하는 리소스도 고려 해야 한다.<br>worker 가 <code>KubernetesPodOperator</code> 를 구동한다면 하나의 pod 가 더 생성되고, 해당 pod 의 리소스 사용은 dag 에서 제한할 수 있는데, worker pod 자체의 리소스 관리 옵션은 따로 없는 듯 하다.<br>따라서 worker 에서 빡센? 작업을 하지 않도록 해야 하고, 특별히 빡센 작업을 하게 된다면 <code>KubernetesPodOperator</code> 로 따로 지정하고 리소스 관리를 하는게 좋겠다.</p>
+<h2 id="기타"><a href="#기타" class="headerlink" title="기타"></a>기타</h2><ul>
+<li>2020-10-19 업데이트 : 그동안의 깨달음을 바탕으로 전체 구조 그림, 글 좀 수정..</li>
+<li>2020-10-23 업데이트 : 차트 세부사항을 업데이트 해서 글 하나 더 썼어요 (<a href="https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart">여기</a>)</li>
+</ul>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B5%AC%EC%84%B1"><span class="toc-number">1.</span> <span class="toc-text">구성</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-image"><span class="toc-number">1.1.</span> <span class="toc-text">docker image</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#airflow-cfg"><span class="toc-number">1.2.</span> <span class="toc-text">airflow.cfg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s-%EA%B5%AC%EC%84%B1-helm"><span class="toc-number">1.3.</span> <span class="toc-text">k8s 구성 (helm)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ClusterRoleBinding"><span class="toc-number">1.3.1.</span> <span class="toc-text">ClusterRoleBinding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment"><span class="toc-number">1.3.2.</span> <span class="toc-text">Deployment</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ConfigMap"><span class="toc-number">1.3.3.</span> <span class="toc-text">ConfigMap</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%8B%A4%EB%B3%B4%EB%8B%88"><span class="toc-number">2.</span> <span class="toc-text">사용하다보니..</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dag-%EC%A0%80%EC%9E%A5%EC%86%8C-%EA%B5%AC%EC%84%B1"><span class="toc-number">2.1.</span> <span class="toc-text">dag 저장소 구성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parallelism-vs-dag-concurrncy-vs-max-active-runs"><span class="toc-number">2.2.</span> <span class="toc-text">parallelism vs dag_concurrncy vs max_active_runs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%ED%83%80"><span class="toc-number">3.</span> <span class="toc-text">기타</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&text=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&is_video=false&description=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes 위에서 Airflow 사용하기&body=Check out this article: https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&title=Kubernetes 위에서 Airflow 사용하기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/&name=Kubernetes 위에서 Airflow 사용하기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>

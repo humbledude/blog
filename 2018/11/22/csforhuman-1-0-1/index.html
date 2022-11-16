@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="아무리 컴퓨터에 대해 잘 모르는 사람도  어디 지나가다가 컴퓨터는 0과 1을 가지고 뭘 했다는 소리 정도는 들었을 것이다.컴퓨터는 기본적으로 0과 1을 가지고 동작하는 기계이다.일단 그놈의 0과 1이 어쨌다는건지 알아보자.   일단 청기 백기 게임을 떠올려 본다.청기백기 게임을 모르는 청춘들은 유투브에서 한번 검색 해 보자.   청기 올려 라는 사회자의 명">
+<meta property="og:type" content="article">
+<meta property="og:title" content="휴먼을 위한 컴퓨터의 이해 1 - 이진법">
+<meta property="og:url" content="https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="아무리 컴퓨터에 대해 잘 모르는 사람도  어디 지나가다가 컴퓨터는 0과 1을 가지고 뭘 했다는 소리 정도는 들었을 것이다.컴퓨터는 기본적으로 0과 1을 가지고 동작하는 기계이다.일단 그놈의 0과 1이 어쨌다는건지 알아보자.   일단 청기 백기 게임을 떠올려 본다.청기백기 게임을 모르는 청춘들은 유투브에서 한번 검색 해 보자.   청기 올려 라는 사회자의 명">
+<meta property="og:locale">
+<meta property="og:image" content="https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/matrix-434035_640.jpg">
+<meta property="og:image" content="https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/blue-white.jpg">
+<meta property="article:published_time" content="2018-11-22T14:55:07.000Z">
+<meta property="article:modified_time" content="2022-11-07T07:13:47.401Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="컴퓨터의 이해">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/matrix-434035_640.jpg">
+    
+    <link rel="canonical" href="/blog/2018/11/22/csforhuman-1-0-1/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>휴먼을 위한 컴퓨터의 이해 1 - 이진법</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/blog/2018/11/27/csforhuman-2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/blog/2018/11/22/csforhuman-0/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&text=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&is_video=false&description=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=휴먼을 위한 컴퓨터의 이해 1 - 이진법&body=Check out this article: https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&name=휴먼을 위한 컴퓨터의 이해 1 - 이진법&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        휴먼을 위한 컴퓨터의 이해 1 - 이진법
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-11-22T14:55:07.000Z" itemprop="datePublished">2018-11-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/%EC%BB%B4%ED%93%A8%ED%84%B0%EC%9D%98-%EC%9D%B4%ED%95%B4/" rel="tag">컴퓨터의 이해</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>아무리 컴퓨터에 대해 잘 모르는 사람도  어디 지나가다가 컴퓨터는 0과 1을 가지고 뭘 했다는 소리 정도는 들었을 것이다.<br>컴퓨터는 기본적으로 0과 1을 가지고 동작하는 기계이다.<br>일단 그놈의 0과 1이 어쨌다는건지 알아보자.</p>
+<img src="/blog/2018/11/22/csforhuman-1-0-1/matrix-434035_640.jpg" class="" title="매트릭스 0과 1">
+
+<p>일단 청기 백기 게임을 떠올려 본다.<br>청기백기 게임을 모르는 청춘들은 유투브에서 한번 검색 해 보자.</p>
+<img src="/blog/2018/11/22/csforhuman-1-0-1/blue-white.jpg" class="" title="청기백기">
+
+<p>청기 올려 라는 사회자의 명령에 청기를 올려 본다.<br>대략 틀리면 맞기도 하고 벌주를 먹기도 한다.<br>이거 하다보면 점점 빨리하는데 잘하는 사람은 진짜 빨리 반응을 잘한다.</p>
+<p>요걸로 컴퓨터의 기본 숫자인 0 과 1을 표현해 볼것이다.</p>
+<p>청기가 올라간것을 1, 내려간것을 0이라고 표현해 보자.<br>얼마나 올라갔는지 보다는 올라갔는지 내려갔는지만 알면 되는거다.<br>이제 0이랑 1을 깃발 하나로 표현할 수 있다는걸 알았다.</p>
+<p>근데 2를 표현하고 싶으면 어떻게 해야 하나?<br>우리에겐 백기가 있다.<br>청기랑 백기를 조합하면 무려 3까지 표현할 수 있다.<br>대충 이런식이다.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0 &#x3D; 청기 내려 백기 내려</span><br><span class="line">1 &#x3D; 청기 내려 백기 올려</span><br><span class="line">2 &#x3D; 청기 올려 백기 내려</span><br><span class="line">3 &#x3D; 청기 올려 백기 올려</span><br></pre></td></tr></table></figure>
+
+<p>깃발 두개로 0 에서 3까지의 숫자를 표현할 수 있는 규칙을 만들었다.<br>그럼 청기백기를 든 아저씨를 몇명 더 데려오면 표현할 수 있는 숫자가 더 많아지겠지?</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">4 &#x3D; 아저씨1 (청기 내려 백기 올려) 아저씨2 (청기 내려 백기 내려)</span><br><span class="line">5 &#x3D; 아저씨1 (청기 내려 백기 올려) 아저씨2 (청기 내려 백기 올려)</span><br></pre></td></tr></table></figure>
+
+<p>혹자는 이것이 이진법이라는것을 알것이다.<br>이진법이란 쉽게 생각해서 0과 1, 두가지 숫자를 여러개 조합해서 우리가 이미 알고있는 다른 숫자를 표현하는 방법이다.<br>위에 나온 깃발든 아저씨들이 많이 모이면 얼마든지 더 큰 숫자도 표현할 수 있다.</p>
+<p>참고로 아저씨들을 많이 모으지 않고 깃발 한개로 숫자를 더 표현하는 방법도 있다.<br>바로 시간차를 두고 순서대로 명령을 읊으면 된다.<br>청기 하나로 해보자 (고급 사회자는 이런 혼미한 명령을 잘 내린다)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0 &#x3D; 청기 내리고 청기 내려</span><br><span class="line">1 &#x3D; 청기 내리고 청기 올려</span><br><span class="line">2 &#x3D; 청기 올리고 청기 내려</span><br><span class="line">3 &#x3D; 청기 올리고 청기 올려</span><br></pre></td></tr></table></figure>
+
+<p>사회자가 이 혼미한 말을 계속 읊으면 더 많은 숫자를 표현 할 수 있다는것을 기억하자.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">245 &#x3D; 청기 올리고 청기 내리고 청기 내리고 청기 올리고 청기 내리고 청기 내리고 청기 내리고 청기 올리고 청기 내리고 청기 올려!!!!</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>그럼 오늘은 여기까지 하고 깃발 올린거랑 내린거랑 숫자랑 갖고 컴퓨터를 뭘 어쨌다는건지는 다음 글에서 알아보자.</p>
+<blockquote>
+<p>연관 용어 : 이진법, digital, serial, parallel</p>
+</blockquote>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&text=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&is_video=false&description=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=휴먼을 위한 컴퓨터의 이해 1 - 이진법&body=Check out this article: https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&title=휴먼을 위한 컴퓨터의 이해 1 - 이진법"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/&name=휴먼을 위한 컴퓨터의 이해 1 - 이진법&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>

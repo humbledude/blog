@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="이번에는 Airflow 를 여러벌 올려야 하는 일이 생겼다.이참에 고친다는 마음으로 helm chart 도 정비해서 다른 사람들한테 공유가 가능한 수준으로 좀 다듬어 졌다. 전체 구성도일단 지난번 포스트(https:&#x2F;&#x2F;humbledude.github.io&#x2F;blog&#x2F;2019&#x2F;07&#x2F;12&#x2F;airflow-on-k8s&#x2F;) 의 그림과 조금 다르지만 뭐 같다고 봐도 되">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Airflow KubernetesExecutor 차트 업데이트">
+<meta property="og:url" content="https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="이번에는 Airflow 를 여러벌 올려야 하는 일이 생겼다.이참에 고친다는 마음으로 helm chart 도 정비해서 다른 사람들한테 공유가 가능한 수준으로 좀 다듬어 졌다. 전체 구성도일단 지난번 포스트(https:&#x2F;&#x2F;humbledude.github.io&#x2F;blog&#x2F;2019&#x2F;07&#x2F;12&#x2F;airflow-on-k8s&#x2F;) 의 그림과 조금 다르지만 뭐 같다고 봐도 되">
+<meta property="og:locale">
+<meta property="og:image" content="https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/20200117_airflow_k8s_(1).png">
+<meta property="article:published_time" content="2020-10-23T08:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-07T07:13:47.397Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="airflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/20200117_airflow_k8s_(1).png">
+    
+    <link rel="canonical" href="/blog/2020/10/23/airflow-k8s-chart/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Airflow KubernetesExecutor 차트 업데이트</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/blog/2021/03/31/pyenv-experiment/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/blog/2020/10/23/mac-backup-speedup/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&text=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&is_video=false&description=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Airflow KubernetesExecutor 차트 업데이트&body=Check out this article: https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&name=Airflow KubernetesExecutor 차트 업데이트&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%84%EC%B2%B4-%EA%B5%AC%EC%84%B1%EB%8F%84"><span class="toc-number">1.</span> <span class="toc-text">전체 구성도</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Helm-Chart"><span class="toc-number">2.</span> <span class="toc-text">Helm Chart</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Airflow KubernetesExecutor 차트 업데이트
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-10-23T08:00:00.000Z" itemprop="datePublished">2020-10-23</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/airflow/" rel="tag">airflow</a>, <a class="tag-link-link" href="/blog/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>이번에는 Airflow 를 여러벌 올려야 하는 일이 생겼다.<br>이참에 고친다는 마음으로 helm chart 도 정비해서 다른 사람들한테 공유가 가능한 수준으로 좀 다듬어 졌다.</p>
+<h2 id="전체-구성도"><a href="#전체-구성도" class="headerlink" title="전체 구성도"></a>전체 구성도</h2><p>일단 지난번 포스트(<a href="https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/">https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/</a>) 의 그림과 조금 다르지만 뭐 같다고 봐도 되겠쥬</p>
+<img src="/blog/2020/10/23/airflow-k8s-chart/20200117_airflow_k8s_(1).png" class="" title="구성도">
+
+<p>다른 점은 <code>ConfigMap</code> 으로 Airflow 설정을 한다는 점인데, 아래에 좀더 자세히 설명이 되어있다.</p>
+<p>이전 글에도 설명했지만, 간단히 Airflow + <code>KubernetesExecutor</code> 의 동작 방식을 설명한다면~</p>
+<ul>
+<li>scheduler 는 DAG 내에 정의된 각 task 마다 worker pod 을 만들어 띄운다.</li>
+<li>worker pod 의 init container 는 git-sync 를 통해 dag 를 다운받고, 필요한 task 를 실행한다.</li>
+<li>만약 worker pod 이 실행해야 될 task 가 <code>KubernetesPodOperator</code> 였다면, task 에 정의된 대로 pod 를 하나 더 띄우고, 해당 pod 의 작업이 잘 동작하는지 모니터링 하는 역할을 한다.</li>
+<li>만약 worker pod 이 실행해야 될 task 가 그 외의 Operator 였다면 (예를 들어, <code>PythonOperator</code>), 해당 동작은 worker container 가 직접 실행한다.</li>
+</ul>
+<p>따라서 <code>KubernetesPodOperator</code> 외에 다른 어떤 Operator 들을 실행하려면, 실행 환경을 worker 의 이미지에 다 담아야 한다.<br>예를 들어, 나는 <code>SqoopOperator</code> 를 실행하려고 했는데, 그러려면 worker image 에 sqoop 명령어와, 각종 권한 관련 환경 셋팅을 해야 한다는 것이다.</p>
+<p>그리고 Airflow 가 worker 를 띄우는 명령어는 entrypoint 를 대체하도록 되어있어서 (적어도 현재까지는, 1.10.12) entrypoint 에 환경설정을 하는 스크립트를 넣으려면 약간의 꼼수가 필요했다.<br>이거는 나중에 필요한 사람이 있다면 또 글을 쓰게 될지도 ㅎㅎ<br>(참고 : <a target="_blank" rel="noopener" href="https://github.com/apache/airflow/issues/8495">https://github.com/apache/airflow/issues/8495</a>)</p>
+<h2 id="Helm-Chart"><a href="#Helm-Chart" class="headerlink" title="Helm Chart"></a>Helm Chart</h2><p>이번에 chart 를 개발하면서 주로 변경한 점은, <code>ConfigMap</code> 을 통해 Airflow 설정을 관련 Pod 들이 공유 할 수 있도록 한 것이다.<br>Airflow 설정은 초기 chart 에서는 cfg 파일에 정의해서 썼었다.<br>그렇게 하면 그 수많은 Airflow 설정값을 일일이 chart 의 항목으로 옮겨 적어야 되서 좀 고생스러웠는데…<br>Airflow 에서는 환경변수를 통해 설정값을 조절하는 방법도 제공하고 있었다.</p>
+<p>(참조 : <a target="_blank" rel="noopener" href="https://airflow.apache.org/docs/stable/howto/set-config.html">https://airflow.apache.org/docs/stable/howto/set-config.html</a>)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> AIRFLOW__&#123;SECTION&#125;__&#123;KEY&#125;=&#123;VALUE&#125;</span><br></pre></td></tr></table></figure>
+<p>위와 같은 포맷으로 설정값을 지정하면 Airflow 의 cfg 파일에 override 해서 설정이 적용된다.</p>
+<p>그리고 Kubernetes 에서는 <code>ConfigMap</code> 의 모든 값을 환경변수로 가져오는 기능이 있다.<br><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables">https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables</a></p>
+<p>따라서, Airflow 의 configuration 정의를 모두 <code>ConfigMap</code> 으로 넣고, webserver, scheduler, worker 가 같은 <code>ConfigMap</code> 을 사용해 환경변수를 설정하면, configuration 을 복붙할수 있다는거다.</p>
+<p>chart 는 아래에 업로드 되어있다.<br><a target="_blank" rel="noopener" href="https://github.com/humbledude/airflow_k8s_chart">https://github.com/humbledude/airflow_k8s_chart</a></p>
+<p>많은 사람들에게 공유할 차트로 쓰기에도 아직 좀 부족한데.. 그냥 일단 블로깅 용으로 공유 한다 ㅎㅎ</p>
+<ul>
+<li>helm v2 에서만 테스트 해본점</li>
+<li>ingress 가 없을때 딱히 예외처리가 없는 점</li>
+<li>github 에서 DAG fetch 하는거 외에 딱히 옵션이 없는 점</li>
+</ul>
+<p>등등이 좀 허접한 것이지만<br>참고하실 분이 있다면 쓰라는 의미에서~<br>chart 내의 <code>airflow_config_env</code> 에 Airflow configuration 항목을 집어 넣으면 그게 다 <code>ConfigMap</code> 으로 생성된다.</p>
+<p>직접 코드를 보면 다 이해가 되실 것으로..<br>(직접 짜기가 고생스럽지만, 짜 놓은 차트는 별거 없다는 helm 의 세계..)</p>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%84%EC%B2%B4-%EA%B5%AC%EC%84%B1%EB%8F%84"><span class="toc-number">1.</span> <span class="toc-text">전체 구성도</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Helm-Chart"><span class="toc-number">2.</span> <span class="toc-text">Helm Chart</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&text=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&is_video=false&description=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Airflow KubernetesExecutor 차트 업데이트&body=Check out this article: https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&title=Airflow KubernetesExecutor 차트 업데이트"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2020/10/23/airflow-k8s-chart/&name=Airflow KubernetesExecutor 차트 업데이트&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Java 에는 maven 이 있고, Javascript &#x2F; node 에는 npm 이 있고, python 에는 pip 가 있는건가? setuptools 가 있는건가? conda??? 뭐지?? Java 는 배포할때 maven 뷜드 하면 되고, Javascript 는 그냥 브라우저에서 돌고, python 은 git pull 하면 되는건가?? 뭐지? Java 는">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 실전 개발 생태계">
+<meta property="og:url" content="https://humbledude.github.io/blog/2019/08/22/python-dev-env/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="Java 에는 maven 이 있고, Javascript &#x2F; node 에는 npm 이 있고, python 에는 pip 가 있는건가? setuptools 가 있는건가? conda??? 뭐지?? Java 는 배포할때 maven 뷜드 하면 되고, Javascript 는 그냥 브라우저에서 돌고, python 은 git pull 하면 되는건가?? 뭐지? Java 는">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-08-22T03:53:12.000Z">
+<meta property="article:modified_time" content="2022-11-07T07:13:47.417Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pyenv">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="pip">
+<meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="/blog/2019/08/22/python-dev-env/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Python 실전 개발 생태계</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/blog/2020/10/23/mac-backup-speedup/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/blog/2019/07/12/airflow-on-k8s/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2019/08/22/python-dev-env/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&text=Python 실전 개발 생태계"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&is_video=false&description=Python 실전 개발 생태계"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Python 실전 개발 생태계&body=Check out this article: https://humbledude.github.io/blog/2019/08/22/python-dev-env/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&name=Python 실전 개발 생태계&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#pyenv-python-%EC%84%A4%EC%B9%98-%EB%B2%84%EC%A0%84%EA%B4%80%EB%A6%AC-dependency-%EA%B2%A9%EB%A6%AC"><span class="toc-number">1.</span> <span class="toc-text">pyenv - python 설치 버전관리,  dependency 격리</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">1.1.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pyenv-%EC%82%AC%EC%9A%A9%EB%B2%95"><span class="toc-number">1.2.</span> <span class="toc-text">pyenv 사용법</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%ED%8A%B9%EC%A0%95-python-%EB%B2%84%EC%A0%84-%EC%84%A4%EC%B9%98"><span class="toc-number">1.2.1.</span> <span class="toc-text">특정 python 버전 설치</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#default-python-%EC%A7%80%EC%A0%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">default python 지정</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%ED%8A%B9%EC%A0%95-%ED%8F%B4%EB%8D%94-%EC%95%84%EB%9E%98%EC%97%90%EC%84%9C-%ED%8A%B9%EC%A0%95-version-%EC%9D%98-python-%EC%9D%84-%EC%A7%80%EC%A0%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">특정 폴더 아래에서 특정 version 의 python 을 지정</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#virtualenv-%EC%83%9D%EC%84%B1-amp-amp-%EC%82%AC%EC%9A%A9"><span class="toc-number">1.2.4.</span> <span class="toc-text">virtualenv 생성 &amp;&amp; 사용</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pyenv-%EC%9D%98-%EC%8B%A4%EC%B2%B4"><span class="toc-number">1.3.</span> <span class="toc-text">pyenv 의 실체</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dependency-%EC%84%A4%EC%B9%98-%EC%B0%B8%EC%A1%B0-path-%EA%B4%80%EB%A6%AC"><span class="toc-number">2.</span> <span class="toc-text">dependency 설치, 참조 path 관리</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pip-%EA%B8%B0%EB%B3%B8"><span class="toc-number">2.1.</span> <span class="toc-text">pip 기본</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python-%EC%B0%B8%EC%A1%B0%EA%B4%80%EA%B3%84-%EA%B8%B0%EB%B3%B8"><span class="toc-number">2.2.</span> <span class="toc-text">python 참조관계 기본</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python-%ED%8C%A8%ED%82%A4%EC%A7%95-%EB%B0%B0%ED%8F%AC"><span class="toc-number">3.</span> <span class="toc-text">python 패키징, 배포</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pip-%ED%8C%A8%ED%82%A4%EC%A7%95-pypi"><span class="toc-number">3.1.</span> <span class="toc-text">pip 패키징 (pypi)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-%ED%8C%A8%ED%82%A4%EC%A7%95"><span class="toc-number">3.2.</span> <span class="toc-text">Docker 패키징</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#base-image-%EA%B3%A0%EB%A5%B4%EA%B8%B0"><span class="toc-number">3.2.1.</span> <span class="toc-text">base image 고르기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%BC%EB%8B%A8-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">3.2.2.</span> <span class="toc-text">일단 돌려보기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dockerfile-%EC%9E%91%EC%84%B1"><span class="toc-number">3.2.3.</span> <span class="toc-text">dockerfile 작성</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%A7%88%EB%AC%B4%EB%A6%AC"><span class="toc-number">4.</span> <span class="toc-text">마무리</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Python 실전 개발 생태계
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-08-22T03:53:12.000Z" itemprop="datePublished">2019-08-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/docker/" rel="tag">docker</a>, <a class="tag-link-link" href="/blog/tags/pip/" rel="tag">pip</a>, <a class="tag-link-link" href="/blog/tags/pyenv/" rel="tag">pyenv</a>, <a class="tag-link-link" href="/blog/tags/python/" rel="tag">python</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>Java 에는 maven 이 있고, Javascript / node 에는 npm 이 있고, python 에는 pip 가 있는건가? setuptools 가 있는건가? conda??? 뭐지??</p>
+<p>Java 는 배포할때 maven 뷜드 하면 되고, Javascript 는 그냥 브라우저에서 돌고, python 은 git pull 하면 되는건가?? 뭐지?</p>
+<p>Java 는 dependency 작업을 maven / gradle 로 하면 되고, Javascript 는 npm 하고 package.json 하면 되는데, python 은 어따가 뭘 명시해서 하지? </p>
+<p>Java 는 jdk 깔고 개발하면 되고, Javascript 는 ES6를 할지 Typescript 해서 webpack 을 하든지 하고 python 은 2는 곧 죽는대서 3 쓰면 되는건데 python 3.6.3 깔았는데 3.7.3 에서 왜 에러가 나지??? 시스템 python은 2.x 인데 뭐지??</p>
+<p>대충 내가 아는 다른 언어 개발 생태계와 비교해서 python 을 처음 개발할때부터 느꼈던 코딩 외적인 생태계의 좌절감을 표현해봤다.</p>
+<p>(짧은 레퍼런스의 한계..)</p>
+<p>그동안 겪었던 python 개발 생태계를 정리해서 개인적인 의견으로 best practice 겸 해서 써봅니다. 더 나은 방법이 있으면 공유해 주세요ㅎㅎ</p>
+<p>저는 pc로 맥을 쓰고 있고, 서버로 linux 를 사용하기 땜에 windows 사용자와는 안맞는 말이 있을수 있습니다.</p>
+<h2 id="pyenv-python-설치-버전관리-dependency-격리"><a href="#pyenv-python-설치-버전관리-dependency-격리" class="headerlink" title="pyenv - python 설치 버전관리,  dependency 격리"></a>pyenv - python 설치 버전관리,  dependency 격리</h2><p>자신의 pc 에서 터미널을 켜고 python 을 치면 어떤 버전이 동작하는지 확신 할수 있는가?<br>현재 프로젝트가 어떤 python 버전으로 돌려야 하며, dependency 설치한게 어디에 설치되어있고, 설치된 패키지 중, 이 프로젝트에 최소한으로 필요한 dependency 가 무엇인지 알 수 있는가? (다 알면.. 패쓰..)</p>
+<p>mac 에서는 기본 python 이 2.x 이다. 우분투는 최근? 3.x 로 넘어왔고, 어느 리눅스 배포판은 python 자체가 없다.</p>
+<p>brew 로 python3 를 설치하고, virtualenv 로 프로젝트별 dependency 를 격리해서 개발하고 있다면, 더이상 할게 없어 보인다.<br>하지만 개인적으로는 pyenv 를 통해 이걸 쉽게 하고 있다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/pyenv/pyenv">https://github.com/pyenv/pyenv</a></p>
+<p>pyenv 를 통해서 python 을 각 버전별로 설치 가능하고, (anaconda 도 python 버전중에 하나로 취급해버림..)<br>pyenv-virtualenv 를 통해서 손쉽게 virtualenv 를 사용할수 있다. (no more venv/bin/activate &amp; deactivate)</p>
+<p>혹 virtualenv 를 모르시는 분은 먼저 virtualenv 가 무언지 검색해보고 옵시다. ㅎㅎ</p>
+<h3 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h3><p>참고1 :  <a target="_blank" rel="noopener" href="https://github.com/pyenv/pyenv#installation">https://github.com/pyenv/pyenv#installation</a></p>
+<p>참고2 : <a target="_blank" rel="noopener" href="https://github.com/pyenv/pyenv-installer">https://github.com/pyenv/pyenv-installer</a></p>
+<p>아래 커맨드로 설치하자. brew 로 인스톨할경우 잘 안된다는 사람들이 종종 있으니 확실한 curl 로 설치하자.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://pyenv.run | bash</span><br></pre></td></tr></table></figure>
+
+<p>설치하면 아래 내용을 <code>~/.bash_profile</code> (또는 <code>~/.zshrc</code>) 에 추가하라고 나온다.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$HOME</span>/.pyenv/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(pyenv init -)</span>&quot;</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(pyenv virtualenv-init -)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>shell 이 시작될때 pyenv 를 초기화 하는 코드이다.</p>
+<h3 id="pyenv-사용법"><a href="#pyenv-사용법" class="headerlink" title="pyenv 사용법"></a>pyenv 사용법</h3><h4 id="특정-python-버전-설치"><a href="#특정-python-버전-설치" class="headerlink" title="특정 python 버전 설치"></a>특정 python 버전 설치</h4><p>일단 뭘 설치할 수 있는지 본다. (설치 가능한 list)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv install -l</span><br></pre></td></tr></table></figure>
+
+<p>쭉 나오는 거중에 3.7.2 를 골라서 설치한다고 한다면</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv install 3.7.2</span><br></pre></td></tr></table></figure>
+
+<p>(여기서 가끔 sqlite library 가 어쩌고 하면서 설치가 실패하는 경우가 있다. stackoverflow의 힘을 빌려보자)</p>
+<p>설치 후 내 pc 에 어떤 python 들이 존재하는지 보자</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv versions</span><br></pre></td></tr></table></figure>
+
+<p>system 이라고 나온것이 system 에 설치된 기본 python이다.</p>
+<p>그 외에 pyenv 로 설치한 버전이 나오며, brew 등 다른 방법으로 설치한 python 은 나오지 않으니 주의 (pyenv 를 쓰다보면 그놈들을 없애고 싶어진다)</p>
+<h4 id="default-python-지정"><a href="#default-python-지정" class="headerlink" title="default python 지정"></a>default python 지정</h4><p>터미널을 켜고 python 을 실행했을때 기본으로 실행할 python version 을 지정하자</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv global &#123;VERSION&#125;</span><br></pre></td></tr></table></figure>
+
+<p>shell 을 켜면 기본으로 사용하게 될 python 을 지정한다고 보면 된다.</p>
+<h4 id="특정-폴더-아래에서-특정-version-의-python-을-지정"><a href="#특정-폴더-아래에서-특정-version-의-python-을-지정" class="headerlink" title="특정 폴더 아래에서 특정 version 의 python 을 지정"></a>특정 폴더 아래에서 특정 version 의 python 을 지정</h4><p>터미널에서 어떤 폴더 (프로젝트 폴더)로 진입하면, 거기부터는 자동으로 특정 version 이 동작하게 해보자</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv <span class="built_in">local</span> &#123;VERSION&#125;</span><br></pre></td></tr></table></figure>
+
+<p>recursive 하게 그 하위 폴더까지도 버전이 적용된다.</p>
+<h4 id="virtualenv-생성-amp-amp-사용"><a href="#virtualenv-생성-amp-amp-사용" class="headerlink" title="virtualenv 생성 &amp;&amp; 사용"></a>virtualenv 생성 &amp;&amp; 사용</h4><p>virtualenv 는 python 의 실행 환경을 격리시켜서 pc 에 설치된 전체 python package 와 격리된 환경에서 python package 관리를 하게 해준다.</p>
+<p>virtualenv 와 pip 를 통해 dependency 관리를 쉽게 할수 있다.</p>
+<p>기존의 virtualenv 는 해당 프로젝트의 폴더 아래에 venv 같은 이름으로 폴더를 생성하고, 수동으로 activate &amp;&amp; deactivate 하면서 썼었다.<br>하지만 pyenv 로 virtualenv 를 생성하면 ~/.pyenv/versions/.. 해당 폴더는 아래 자리를 잡는다. 그리고 activate &amp;&amp; deactivate 는 위에서 설명한 <code>pyenv local</code> 로 자동으로 설정하면 된다.</p>
+<p>일단 한번 생성해보자. <code>3.7.2</code> 기반의 <code>my-project</code> 라는 virtualenv 이다.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv virtualenv 3.7.2 my-project</span><br><span class="line">pyenv virtualenv &#123;VERSION&#125; &#123;ENV_NAME&#125;</span><br></pre></td></tr></table></figure>
+
+<p>그리고 <code>pyenv versions</code> 를 해보면, <code>3.7.2/envs/my-project</code> 와 <code>my-project</code> 항목이 보인다. (두개가 같은거)</p>
+<p>그리고 어떤 프로젝트의 폴더를 들어가면 방금 생성한 my-project virtualenv 가 자동으로 activate 되게 하자</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyenv <span class="built_in">local</span> my-project</span><br></pre></td></tr></table></figure>
+
+<p>다른 폴더로 이동하면 자동으로 deactivate 된다.</p>
+<p>그리고 열심히 개발을 하자…</p>
+<h3 id="pyenv-의-실체"><a href="#pyenv-의-실체" class="headerlink" title="pyenv 의 실체"></a>pyenv 의 실체</h3><p>이 놀라운 일을 해주는 pyenv 는 사실 ~/.pyenv 폴더 안에 모든 실행 파일과 참조 library 를 저장하고, 상황에 맞게 심볼릭 링크 / 참조 path 를 조작 해주는 유틸이라고 생각하면 된다.</p>
+<p>자세한건 아래 링크를 읽어보자.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/pyenv/pyenv#how-it-works">https://github.com/pyenv/pyenv#how-it-works</a></p>
+<p>이 정도면 pyenv 에서 필수적인 부분은 다 해봤다.  pyenv 의 나머지 기능은 알아서 탐구해 보자.. ㅎㅎ</p>
+<h2 id="dependency-설치-참조-path-관리"><a href="#dependency-설치-참조-path-관리" class="headerlink" title="dependency 설치, 참조 path 관리"></a>dependency 설치, 참조 path 관리</h2><h3 id="pip-기본"><a href="#pip-기본" class="headerlink" title="pip 기본"></a>pip 기본</h3><p>virtualenv 를 처음 구성하면, 3rd party 모듈이 하나도 설치되어있지 않은 청정 구역이 나타난다. (pip 를 실행하기 위한 최소한의 모듈만 설치된 상태이다.)</p>
+<p>개발을 진행하면서 pip install 로 여러 모듈을 설치하고 아래와 같이 프로젝트에 설치한 모듈의 리스트를 구하자</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># requests 하나 설치해 봅니다.</span></span><br><span class="line">pip install requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># requirements.txt 로 설치된 3rd party 모듈을 내보낸다</span></span><br><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p><code>requirements.txt</code> 를 열어보면, 모듈명과 그 버전이 나열되어있다.</p>
+<p>나중에 이걸 어디가서 똑같이 설치하려명 이렇게 하면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p>근데 pip 로 뭘 설치하면 모듈 코드는 어디에 저장이 되는거고, python 은 어떻게 그 참조 위치를 가져오는 건가?</p>
+<h3 id="python-참조관계-기본"><a href="#python-참조관계-기본" class="headerlink" title="python 참조관계 기본"></a>python 참조관계 기본</h3><p>~/.pyenv 하위 폴더를 까보면 거의 모든걸 알수 있다.</p>
+<p>방금 설치한 <code>3.7.2</code> python 과 <code>my-project</code> virtualenv 를 기준으로 돌아다녀보자</p>
+<p>일단 python 3.7.2 상태에서 설치한 모듈은 여기에 모인다.</p>
+<p><code>~/.pyenv/versions/3.7.2/lib/python3.7/site-packages</code></p>
+<p>그리고 <code>my-project</code> virtualenv 상태에서 설치한 모듈은 여기에 모인다.</p>
+<p><code>~/.pyenv/versions/3.7.2/envs/my-project/lib/python3.7/site-packages</code></p>
+<p>그리고 python runtime 에서 참조하는 path 는 이렇게 알 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.path</span><br></pre></td></tr></table></figure>
+
+<p>그러면 사용중인 python 에 따라 위에서 언급한 site-packages 폴더를 참조하는것을 알 수 있다.</p>
+<p>참조 path 를 추가하거나 관리하는 것은 각자 탐구해보자.</p>
+<p>내가 발견한 방법은 아래와 같다.</p>
+<ul>
+<li><code>PYTHONPATH</code> 라는 환경변수에 지정하거나 (여러 path 간 구분자는 <code>PATH</code> 와 동일하게 <code>:</code> 사용),</li>
+<li><code>sys.path</code> 에다가 추가 하거나 (<code>sys.path.append(&#39;path/to/lib&#39;)</code>)</li>
+<li><code>site-packages/xxx.pth</code> 파일에 추가하거나.. (참고) <a target="_blank" rel="noopener" href="https://docs.python.org/3.7/library/site.html">https://docs.python.org/3.7/library/site.html</a></li>
+</ul>
+<p>상황에 맞춰 쓰면 될거 같다.</p>
+<h2 id="python-패키징-배포"><a href="#python-패키징-배포" class="headerlink" title="python 패키징, 배포"></a>python 패키징, 배포</h2><p>패키징이라 함은, 개발한 프로젝트를 어떠한 방식으로 묶어서 재사용이 가능하게 하는 일이다.</p>
+<p>라이브러리 모듈을 개발했다면, pip 같은걸로 받아서 쓸수있게 패키징하여 배포하면 되고,</p>
+<p>웹서버를 개발했다면, 적절히 패키징해서 배포 / 실행할수있게 해야겠다.</p>
+<p>물론 개발 상황은 각자 다르고, 각자의 노하우가 있음을 아는 상태에서, 이런 방법도 있다더라 하는 정도로 받아들일 내용을 적어본다.</p>
+<h3 id="pip-패키징-pypi"><a href="#pip-패키징-pypi" class="headerlink" title="pip 패키징 (pypi)"></a>pip 패키징 (pypi)</h3><p>오리지날 공식 가이드는 이걸 참조한다.</p>
+<p><a target="_blank" rel="noopener" href="https://packaging.python.org/">https://packaging.python.org/</a></p>
+<p>모듈을 개발했고, 이걸 pip 로 다운받아 쓸수 있게 하려고 한다면, 이 가이드를 따르면 되겠다.</p>
+<p>pypi 는 pip 의 서버라고 생각하면 되겠다.</p>
+<p>가이드를 따라가다보면, README, LICENSE 이런 내용도 나오는데, 그건 그 문서에서 보도록 하고, 구체적인 할일들만 쫓아가 보자.</p>
+<p>모듈 개발은 완료했다고 치고..</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://pypi.org/">https://pypi.org/</a> 사이트에 가입한다.</li>
+<li>setup.py 파일을 작성한다<ul>
+<li>여기에 모듈 이름이라던지, 이 모듈을 사용하기 위한 dependency 라던지 하는 내용을 기술하게 되어있다.</li>
+<li>이건 setuptools 라는 배포 유틸에서 쓰게 되는데, 배포 유틸들에 대해 자세히 알고싶으면 이걸 누르자 : <a target="_blank" rel="noopener" href="https://packaging.python.org/key_projects/">https://packaging.python.org/key_projects/</a></li>
+</ul>
+</li>
+<li>패키징을 위해 setuptools, wheel, twine 을 설치한다. 각자가 뭔지 알고 싶으면 위 링크에 같이 나와 있다.</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install --upgrade setuptools, wheel, twine</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>패키징 실시</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python setup.py sdist bdist_wheel</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>그러면 dist/ 폴더 아래에 파일이 생성된다.</li>
+<li>이걸 pypi 서버에 배포한다</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">twine upload dist/*</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>아이디 패스워드를 치고 업로드가 된다. pip install xx 로 받을수 있다!!</li>
+</ol>
+<p>가이드에서는 테스트를 위해 twine 으로 업로드할때 test url 을 먼저 써보는걸 장려한다.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">twine upload --repository-url https://test.pypi.org/legacy/ dist/*</span><br></pre></td></tr></table></figure>
+
+<p>한번 해보면 나중엔 아마 실서버에만 올리게 될듯..</p>
+<h3 id="Docker-패키징"><a href="#Docker-패키징" class="headerlink" title="Docker 패키징"></a>Docker 패키징</h3><p>python 으로 앱을 만들었다면 Docker 로도 한번 패키징 해보자.</p>
+<p>Docker 로 패키징을 하면 python 버전관리 문제로부터도 안전해지고, 뭔가 이게 제대로된 프로덕트가 된듯한 기분도 얻을수 있다!</p>
+<h4 id="base-image-고르기"><a href="#base-image-고르기" class="headerlink" title="base image 고르기"></a>base image 고르기</h4><p>특별한 사유가 없다면 python 공식 docker image 중에서 base 를 고르자</p>
+<p><a target="_blank" rel="noopener" href="https://hub.docker.com/_/python">https://hub.docker.com/_/python</a></p>
+<p>마치 pyenv 에서 설치가능한 버전리스트를 받은것마냥 각종 버전 + linux 배포판 들이 모여있다.</p>
+<p>예전같았다면 최대한 lite 하다는 alpine 을 추천했겠지만,, docker 를 쓰다보니 용량이 쪼금 더 많더라도 debian 을 고르게 되었다.<br>alpine 은 가끔가다 호환성 이슈가 발생해서..</p>
+<p>일단 뭐 위에서 pyenv 하면서 작성한 3.7.2 my-project 를 돌리기 위해서 같은 버전  + debian 인 <code>3.7-slim-buster</code> 를 사용해본다. (patch 버전따위 무시한다 )</p>
+<h4 id="일단-돌려보기"><a href="#일단-돌려보기" class="headerlink" title="일단 돌려보기"></a>일단 돌려보기</h4><p>dockerfile 로 이미지를 빌드하기 전에, 간단하게 base image 상태로 프로젝트를 돌려볼 수 있다.</p>
+<p>현재 프로젝트 폴더와, virtualenv 에서 설치한 pip 모듈이 포함된 폴더 정도 mount 해서 돌려보자.</p>
+<p>돌려야되는 파일이 main.py 라고 친다면..</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># main.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">print(requests.get(<span class="string">&#x27;http://google.com&#x27;</span>).text)</span><br></pre></td></tr></table></figure>
+
+<p>요렇게 돌린다.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -v $(<span class="built_in">pwd</span>):/app \</span><br><span class="line">  -v <span class="variable">$PYENV_VIRTUAL_ENV</span>/lib/python3.7/site-packages:/libs \</span><br><span class="line">  -e PYTHONPATH=/libs \</span><br><span class="line">  python:3.7-slim-buster \</span><br><span class="line">  python /app/main.py</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>현재 작성한 프로그램은 <code>/app</code> 에 마운트 했다</li>
+<li>pip 로 설치한 모듈은 <code>/libs</code> 에 마운트하고 <code>PYTHONPATH</code> 환경변수로 참조 경로를 잡아줬다</li>
+</ul>
+<p>python 코드에 다른거 추가하다가 c 로 빌드된 모듈이 있다면 위 방법으로 돌지 않는다. (pc 는 맥이고 docker 는 리눅스 이기 때문에..)</p>
+<p>개발 초기에 docker 테스트 등에만 잠깐 사용해볼만한거..</p>
+<p>바로 dockerfile 작성으로 넘어가 보자.</p>
+<h4 id="dockerfile-작성"><a href="#dockerfile-작성" class="headerlink" title="dockerfile 작성"></a>dockerfile 작성</h4><p>도커라면 역시 dockerfile 로 이미지 만들어 돌려야 제맛이다.</p>
+<p>dockerfile 을 돌리기 전에 pip freeze 를 사용해서 requirements.txt 를 생성해두자.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p>그리고 dockerfile 작성 - 완전 미니멀이다</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> python:<span class="number">3.7</span>-slim-buster</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> . /app</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install -r /app/requirements.txt</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="bash"> python /app/main.py</span></span><br></pre></td></tr></table></figure>
+
+<p>빌드하고 돌려보자. 이건 돌아야 한다.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build . --tag <span class="built_in">test</span></span><br><span class="line">docker run <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>그리고 이 이미지를 릴리즈 하고, 돌리면 패키징이 완벽..하게 된거다.</p>
+<p>하지만 이제부터 시작하게 되는 일이 아래와 같이 벌어진다.</p>
+<ol>
+<li>docker 를 non-root 유저로 실행하게 하기</li>
+<li>3rd party 모듈에서 필요로 하는 각종 c library 설치 (리눅스 배포판에 따라 yum / apt 등등으로 설치)</li>
+<li>docker volume / environment variable 로 각종 변동사항 제어하기</li>
+<li>빌드 / 배포 / container 제어 등등 devops</li>
+</ol>
+<p>해당 부분은 python 이슈라기 보다는 docker 의 영역일수 있으니, 열심히 사용하면서 내공을 단련해보자.</p>
+<h2 id="마무리"><a href="#마무리" class="headerlink" title="마무리"></a>마무리</h2><p>개인적으로 java 를 사용하다 python 을 처음 사용하게 되면서 그 편안함에 박수를 치다가</p>
+<p>중구남방 관리안되는 환경 + 버전별로 이어지는 충돌에 좌절을 겪고,</p>
+<p>그래도 편하니까 계속 쓰다보니 python 개발 생태계에 대해 조금 이해가 생겼다고 판단되어 글을 써봤습니다.</p>
+<p>python 매우 편하니까 많이 씁시다.</p>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#pyenv-python-%EC%84%A4%EC%B9%98-%EB%B2%84%EC%A0%84%EA%B4%80%EB%A6%AC-dependency-%EA%B2%A9%EB%A6%AC"><span class="toc-number">1.</span> <span class="toc-text">pyenv - python 설치 버전관리,  dependency 격리</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">1.1.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pyenv-%EC%82%AC%EC%9A%A9%EB%B2%95"><span class="toc-number">1.2.</span> <span class="toc-text">pyenv 사용법</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%ED%8A%B9%EC%A0%95-python-%EB%B2%84%EC%A0%84-%EC%84%A4%EC%B9%98"><span class="toc-number">1.2.1.</span> <span class="toc-text">특정 python 버전 설치</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#default-python-%EC%A7%80%EC%A0%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">default python 지정</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%ED%8A%B9%EC%A0%95-%ED%8F%B4%EB%8D%94-%EC%95%84%EB%9E%98%EC%97%90%EC%84%9C-%ED%8A%B9%EC%A0%95-version-%EC%9D%98-python-%EC%9D%84-%EC%A7%80%EC%A0%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">특정 폴더 아래에서 특정 version 의 python 을 지정</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#virtualenv-%EC%83%9D%EC%84%B1-amp-amp-%EC%82%AC%EC%9A%A9"><span class="toc-number">1.2.4.</span> <span class="toc-text">virtualenv 생성 &amp;&amp; 사용</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pyenv-%EC%9D%98-%EC%8B%A4%EC%B2%B4"><span class="toc-number">1.3.</span> <span class="toc-text">pyenv 의 실체</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dependency-%EC%84%A4%EC%B9%98-%EC%B0%B8%EC%A1%B0-path-%EA%B4%80%EB%A6%AC"><span class="toc-number">2.</span> <span class="toc-text">dependency 설치, 참조 path 관리</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pip-%EA%B8%B0%EB%B3%B8"><span class="toc-number">2.1.</span> <span class="toc-text">pip 기본</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python-%EC%B0%B8%EC%A1%B0%EA%B4%80%EA%B3%84-%EA%B8%B0%EB%B3%B8"><span class="toc-number">2.2.</span> <span class="toc-text">python 참조관계 기본</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python-%ED%8C%A8%ED%82%A4%EC%A7%95-%EB%B0%B0%ED%8F%AC"><span class="toc-number">3.</span> <span class="toc-text">python 패키징, 배포</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pip-%ED%8C%A8%ED%82%A4%EC%A7%95-pypi"><span class="toc-number">3.1.</span> <span class="toc-text">pip 패키징 (pypi)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-%ED%8C%A8%ED%82%A4%EC%A7%95"><span class="toc-number">3.2.</span> <span class="toc-text">Docker 패키징</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#base-image-%EA%B3%A0%EB%A5%B4%EA%B8%B0"><span class="toc-number">3.2.1.</span> <span class="toc-text">base image 고르기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%BC%EB%8B%A8-%EB%8F%8C%EB%A0%A4%EB%B3%B4%EA%B8%B0"><span class="toc-number">3.2.2.</span> <span class="toc-text">일단 돌려보기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dockerfile-%EC%9E%91%EC%84%B1"><span class="toc-number">3.2.3.</span> <span class="toc-text">dockerfile 작성</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%A7%88%EB%AC%B4%EB%A6%AC"><span class="toc-number">4.</span> <span class="toc-text">마무리</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2019/08/22/python-dev-env/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&text=Python 실전 개발 생태계"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&is_video=false&description=Python 실전 개발 생태계"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Python 실전 개발 생태계&body=Check out this article: https://humbledude.github.io/blog/2019/08/22/python-dev-env/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&title=Python 실전 개발 생태계"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2019/08/22/python-dev-env/&name=Python 실전 개발 생태계&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>

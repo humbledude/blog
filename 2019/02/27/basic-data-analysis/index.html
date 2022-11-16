@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="문제의 시작회사에서 검색어를 기반으로 유저의 니즈를 추정하는 업무를 맡게 되었다.예를 들어 강남 맛집 이라는 검색어에 대한 유저의 니즈는 강남역 근처의 맛있는 음식점 이다. 이번에 유저의 니즈를 파악해야 할 검색어는 스키복할인매장 이다.검색어 스키복할인매장 을 입력한 유저들이 찾는 장소가 다음중 어느것 일까?  스키타러 가다보면 보이는 외곽지역에 있는 창고">
+<meta property="og:type" content="article">
+<meta property="og:title" content="기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지">
+<meta property="og:url" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="문제의 시작회사에서 검색어를 기반으로 유저의 니즈를 추정하는 업무를 맡게 되었다.예를 들어 강남 맛집 이라는 검색어에 대한 유저의 니즈는 강남역 근처의 맛있는 음식점 이다. 이번에 유저의 니즈를 파악해야 할 검색어는 스키복할인매장 이다.검색어 스키복할인매장 을 입력한 유저들이 찾는 장소가 다음중 어느것 일까?  스키타러 가다보면 보이는 외곽지역에 있는 창고">
+<meta property="og:locale">
+<meta property="og:image" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/NormalDist1.96.png">
+<meta property="og:image" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/binomial_1.png">
+<meta property="og:image" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/binomial_2.png">
+<meta property="og:image" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/beta_1.png">
+<meta property="og:image" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/beta_2.png">
+<meta property="article:published_time" content="2019-02-26T15:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-07T07:13:47.399Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="데이터 분석">
+<meta property="article:tag" content="확률과 통계">
+<meta property="article:tag" content="베이지안 추론">
+<meta property="article:tag" content="베이즈 확률론">
+<meta property="article:tag" content="가설검정">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/NormalDist1.96.png">
+    
+    <link rel="canonical" href="/blog/2019/02/27/basic-data-analysis/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/blog/2019/07/12/airflow-on-k8s/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/blog/2018/12/10/csforhuman-3/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&text=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&is_video=false&description=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지&body=Check out this article: https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&name=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AC%B8%EC%A0%9C%EC%9D%98-%EC%8B%9C%EC%9E%91"><span class="toc-number">1.</span> <span class="toc-text">문제의 시작</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%99%95%EB%A5%A0"><span class="toc-number">2.</span> <span class="toc-text">확률</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B9%88%EB%8F%84%EC%A3%BC%EC%9D%98-%ED%86%B5%EA%B3%84%EC%99%80-%EA%B0%80%EC%84%A4%EA%B2%80%EC%A0%95"><span class="toc-number">3.</span> <span class="toc-text">빈도주의 통계와 가설검정</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B2%A0%EC%9D%B4%EC%A6%88-%ED%99%95%EB%A5%A0%EB%A1%A0"><span class="toc-number">4.</span> <span class="toc-text">베이즈 확률론</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B2%A0%EC%9D%B4%EC%A7%80%EC%95%88-%EC%B6%94%EB%A1%A0"><span class="toc-number">5.</span> <span class="toc-text">베이지안 추론</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%8B%A4%EC%8B%9C-%EB%AC%B8%EC%A0%9C%EB%A1%9C-%EB%8F%8C%EC%95%84%EA%B0%80%EC%84%9C"><span class="toc-number">6.</span> <span class="toc-text">다시 문제로 돌아가서..</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B7%B8-%EC%99%B8-%EC%82%BD%EC%A7%88"><span class="toc-number">7.</span> <span class="toc-text">그 외 삽질</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">8.</span> <span class="toc-text">참고</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%99%95%EB%A5%A0-%EA%B0%9C%EB%85%90-%EC%9E%A1%EA%B8%B0"><span class="toc-number">8.1.</span> <span class="toc-text">확률 개념 잡기</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%B9%88%EB%8F%84%EC%A3%BC%EC%9D%98-%ED%86%B5%EA%B3%84"><span class="toc-number">8.2.</span> <span class="toc-text">빈도주의 통계</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%B2%A0%EC%9D%B4%EC%A7%80%EC%95%88-%ED%86%B5%EA%B3%84"><span class="toc-number">8.3.</span> <span class="toc-text">베이지안 통계</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B7%B8%EB%A6%AC%EA%B8%B0-%EC%B0%B8%EA%B3%A0"><span class="toc-number">8.4.</span> <span class="toc-text">그래프 그리기 참고</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-26T15:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/%EA%B0%80%EC%84%A4%EA%B2%80%EC%A0%95/" rel="tag">가설검정</a>, <a class="tag-link-link" href="/blog/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B6%84%EC%84%9D/" rel="tag">데이터 분석</a>, <a class="tag-link-link" href="/blog/tags/%EB%B2%A0%EC%9D%B4%EC%A6%88-%ED%99%95%EB%A5%A0%EB%A1%A0/" rel="tag">베이즈 확률론</a>, <a class="tag-link-link" href="/blog/tags/%EB%B2%A0%EC%9D%B4%EC%A7%80%EC%95%88-%EC%B6%94%EB%A1%A0/" rel="tag">베이지안 추론</a>, <a class="tag-link-link" href="/blog/tags/%ED%99%95%EB%A5%A0%EA%B3%BC-%ED%86%B5%EA%B3%84/" rel="tag">확률과 통계</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="문제의-시작"><a href="#문제의-시작" class="headerlink" title="문제의 시작"></a>문제의 시작</h2><p>회사에서 검색어를 기반으로 유저의 니즈를 추정하는 업무를 맡게 되었다.<br>예를 들어 <em>강남 맛집</em> 이라는 검색어에 대한 유저의 니즈는 <em>강남역 근처의 맛있는 음식점</em> 이다.</p>
+<p>이번에 유저의 니즈를 파악해야 할 검색어는 <em>스키복할인매장</em> 이다.<br>검색어 <em>스키복할인매장</em> 을 입력한 유저들이 찾는 장소가 다음중 어느것 일까?</p>
+<ol>
+<li>스키타러 가다보면 보이는 외곽지역에 있는 창고형 할인 매장 같은 느낌의 장소인지?</li>
+<li>아니면 스키복을 파는 모든 장소인지? (어짜피 다 할인중이니까!!)</li>
+</ol>
+<p>위 문제를 얼렁뚱땅 내 느낌으로 말고 데이터에 의거해 판단해 보기로 했다.</p>
+<ol>
+<li><em>스키복할인매장</em> 을 검색한 유저의 로그를 분석해서 (1) 또는 (2) 로 분류 한다</li>
+<li>그리고 통계적 추론?을 통해 최종 결론을 내린다.</li>
+</ol>
+<p>일단 1번 스텝에서 로그를 분석해서 분류 하는 부분은 하나씩 로그를 열어봐서 유저의 패턴을 찾아야 되는 상황이다.<br>그러면 가지고 있는 로그 중에 몇 개를 샘플링 해서 수동으로 해야겠다.<br>그리고 그 결과를 바탕으로 통계적 추론 도구를 적용해 보면 되겠다는 생각이 들었다.</p>
+<p>이렇게 생각하고 통계적 추론 도구로 덜컥 <em>베이지안 추론</em> 을 집어 들었다.<br><em>베이지안 추론</em>을 집어 들은 이유는 아래 링크에서 <strong>데이터 사이언티스트가 갖추어야 할 스킬</strong>로서 Bayesian inference 라는 단어를 보았기 때문이다.<br><a target="_blank" rel="noopener" href="https://brunch.co.kr/@hero4earth/3">https://brunch.co.kr/@hero4earth/3</a><br>(그렇게 하면 안되는 것이었다..)</p>
+<p>그렇게 무식한 나는 베이지안 추론 -&gt; 베이즈 정리 -&gt; 베이즈 이론? -&gt; 베이즈 확률 -&gt; 확률 -&gt; 통계 -&gt; 가설 검정 … 의 늪에 빠져든다. (이해가 안되니 다른걸 참조 참조 참조.. ㅠㅠ)</p>
+<p>나의 무식함을 탓하며 깊은 늪에 빠졌다가 빠져나오면서 순서대로 정리 해본다.<br>늪에서 발견한 이 모든것의 시작점은 <strong>확률</strong> 이다.</p>
+<h2 id="확률"><a href="#확률" class="headerlink" title="확률"></a>확률</h2><p>중고등학교때 배운 확률과 통계 과목을 떠올려 보자.<br>(안 떠오른다. 그냥 상식적으로 생각한다.)</p>
+<p>보통 이렇게 확률이라는 단어를 사용했다.</p>
+<blockquote>
+<p>동전 하나를 던졌을때 앞면이 나올 확률은 1/2 이다.</p>
+</blockquote>
+<p>근데 실제로 동전을 던져보자</p>
+<blockquote>
+<p>동전 하나를 실제로 100번 던졌는데 앞면이 52번 나왔다.</p>
+</blockquote>
+<p>당연한 말인데, 이걸 정확히 뭐라 부르는지를 못해서 베이지안 추론 에서 여기까지 굴러왔다.<br>같은 내용을 관점에 따라 다르게 표현한 것이다.</p>
+<p>엄밀히 말해 동전의 앞면이 나올 확률이 1/2 이라고 할때는 몇가지 가정이 포함된다.</p>
+<ul>
+<li>동전의 가장자리의 면적은 0이다</li>
+<li>동전의 앞, 뒷면의 면적이 같다</li>
+<li>동전을 던질때 공기의 흐름 등 어쩌구 외부적인 요인은 없다.</li>
+</ul>
+<p>이를 바탕으로 확률을 계산하면 ‘이상적인’ 확률이 등장한다.<br>이 1/2 이라는 값을 <strong>수학적 확률</strong> 이라고 한단다.<br>이건 계산상, 즉 이론상이고..</p>
+<p>현실에 있는 동전을 실제로 던져보면 동전은 분명 앞면 또는 뒷면이 나오고, 동전이 세워지기도 한다…<br>한 100번 던지면 실제로 앞면이 52번이 나오는 경우도 있고, 43번 나올수도 있는거다<br>그러면, 100번 던져서 52번 앞면이 나왔으니까 이렇게 말해도 될까?</p>
+<blockquote>
+<p>이 동전을 던져서 앞면이 나올 확률은 52/100 이야</p>
+</blockquote>
+<p>아 여기부터 좀 애매해진다. 상식적으로는 이렇게 말할 수 있다.</p>
+<blockquote>
+<p>(학교에서 배웠다는 말투로) 야.. 그 동전을 무한히 던지다 보면 확률은 1/2 이 될꺼야..</p>
+</blockquote>
+<p>이처럼 현실에서 <em>확률</em>은 어떠한 <em>확정된 결과</em>로 나타나고, 이를 모아서 <em>일련의 데이터</em>로 취급한다.<br>또는 반대로, <em>현실에 있는 다양한 데이터</em>를 수집해서 사건의 <em>확률</em>을 계산 해 내기도 한다.</p>
+<p>그런데, 이렇게 계산한 확률을 가지고, 아직 일어나지 않은 일이 어떻게 될것인지 <strong>예측</strong>해 보는것도 가능하다.<br>예를 들어, 어떤 이상한 동전이 있는데, 아무리 봐도 이건 1/2 로 앞면이 나오지 않을꺼 같이 생긴거다.<br>(휜거 같기도 하고 뭐 그런느낌)<br>그래서 이걸 100번 던져봤더니 앞면이 46번 나왔다.<br>그래서 이런 결론을 내려 봤다.</p>
+<blockquote>
+<p>이 동전을 던져서 앞면이 나올 확률은 1/2 보다 작다.</p>
+</blockquote>
+<p>자, 이 주장을 믿을 수 있을까?<br>100번 던져서 앞면이 46번 나왔다니까 1/2 보다 적은건 맞는데,<br>그렇다고 이 테스트 결과에 의거해 이 동전을 가지고 하는 도박에서 뒷면에 돈을 더 많이 베팅 할 수 있겠느냐 이거다.</p>
+<p>좀 불안해서 100 번을 더 던져서 앞면이 49번 나왔다.<br>그러면 이걸 믿을 수 있는건가?<br>차라리 무한히 던져보면 어떨까? 무한히 던졌더니 48/100 의 확률이 나온다면 전재산을 가지고 뒷면에 계속 베팅하면 결국 돈을 딴다는 거잖니.<br>근데 당장 돈걸어야되는데 언제까지 무한히 던져야 하는건가..<br>얼마나 동전을 더 던지면 되는걸까?</p>
+<p>이 질문에 답을 찾다보니 <strong>통계</strong>가 등장했다.<br>정확히는 <em>Frequentist (빈도주의) 통계</em>의 영역이 등장한거다.</p>
+<h2 id="빈도주의-통계와-가설검정"><a href="#빈도주의-통계와-가설검정" class="headerlink" title="빈도주의 통계와 가설검정"></a>빈도주의 통계와 가설검정</h2><p>빈도주의 통계?<br>나에게는 매우 생소한 단어였다. 빈도주의와 구분되는 단어는 <em>베이지안</em> 이다.<br>뭐 두가지 학파? 가 있다는 것으로 이해 했다…<br>그리고 보통 접할 수 있는 통계는 빈도주의 통계라고 한다..<br>(그치만 요새 머신러닝 때문에 베이지안도 많이 들을 수도 있다.)</p>
+<p>빈도주의와 베이지안 사고방식의 차이는 아래 블로그에서 잘 설명 해 주셨다.<br><a target="_blank" rel="noopener" href="https://blog.naver.com/bestian/10095013721">https://blog.naver.com/bestian/10095013721</a></p>
+<p>위 블로그를 참고해서 우리의 이상한 동전에 대해서 빈도주의적인 접근을 해보자.</p>
+<ol>
+<li>(귀무가설) 이 동전도 보통 동전이라면 1/2 확률로 앞면이 나올 것이다.</li>
+<li>(대립가설) 근데 내눈에는 이 동전이 휘어 보여서 1/2 확률로 앞면이 나올거 같지가 않다.</li>
+<li>그럼 실제로 좀 던져본다. 총 100번 중에 앞면이 46번 나왔다.</li>
+<li>그럼 통계 이론에 따라 좀 계산을 해본다. 결과에 따라 동전이 휘었는지 안휘었는지 판단한다.</li>
+</ol>
+<p>그럼 ‘4. 통계이론에 따라 계산’은 어떻게 풀면 될까?<br>기존의 가설 (1. 귀무가설)을 기반으로 확률 분포를 계산하고,<br><strong>내가 가진 데이터</strong>가 이 분포 상에서 <strong>있을만한 일</strong>이면, <strong>기존의 가설이 맞는것</strong>이고,<br><strong>있을만한 일이 아니</strong>라면, <strong>기존의 가설이 틀릴</strong> 수 있다는거다.<br>있을만한 일의 기준은 <em>신뢰수준</em> 이라는 단어를 써서 95%, 99% 등으로 설정하며,<br>주로 뉴스에서 선거철에 듣는, <em>이 여론조사는 95%의 신뢰수준이 어쩌고..</em> 하는 말에서 나오는 그말이다.<br>95% 신뢰 수준이라는 말은, <strong>100번중에 95번은 가설에 맞는 데이터가 나타난다</strong>는 소리란다.<br>신뢰 수준의 정확한 의미는 여기서 한번 보자<br><a target="_blank" rel="noopener" href="http://mkseo.pe.kr/stats/?p=763">http://mkseo.pe.kr/stats/?p=763</a></p>
+<p>상당히 혼미한데, 이 어려운 내용은 그림으로 보자.</p>
+<img src="/blog/2019/02/27/basic-data-analysis/NormalDist1.96.png" class="" title="정규분포-95신뢰수준">
+<p>그림 펌 : <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Statistical_significance">https://en.wikipedia.org/wiki/Statistical_significance</a></p>
+<p>많이 본듯한 정규 분포 그래프에서 가운데 색칠된 부분이 95% 신뢰 구간이다.<br>내가 가진 데이터가 95% 의 영역 안에 들어가는지? 아니면 양쪽끝 5% (양쪽이니까 각 2.5%) 구간에 속하는지 보는거다.<br>그림상 파란부분이 위 설명에 따르면 <strong>있을만한 일</strong> 의 구간이고, 나머지가 <strong>있을만한 일이 아닌</strong> 구간이다.</p>
+<p>아무튼 됐고, 이제 풀어볼까 하는데, 나는 수학은 1도 모르니까 계산으로는 못푼다. 그냥 그림으로만 보자 ㅎㅎ</p>
+<p>동전을 100번 던졌을때 앞면이 몇번 나올지에 대한 그림을 그려본다.<br>동전 상태는 앞, 뒤 두개밖에 없다고 치면 이항분포를 사용해서 그리면 된단다.<br>그림 그리기에 쓴 툴 : <a target="_blank" rel="noopener" href="http://onlinestatbook.com/2/calculators/binomial_dist.html">http://onlinestatbook.com/2/calculators/binomial_dist.html</a></p>
+<img src="/blog/2019/02/27/basic-data-analysis/binomial_1.png" class="" title="동전던지기1">
+
+<p>이게 무슨 뜻이냐면, 정상 동전은 100번 던져서 46번 이하로 앞면이 나올 확률이 0.2421 이라는 거다.<br>그게 무슨 소리냐면 지금 100번 던져서 46번 앞면 나온게 <strong>95% 신뢰구간 안</strong>에 있는 상황이고, 이건 꽤나 <strong>있을법한 일</strong>이라는거다.<br>그래서 대체 이게 무슨 소리냐며는 <strong>이 동전은 정상같아 보인다</strong>는거다.</p>
+<p>아 그럴리가 없어.. 얼마나 앞면이 안나와야 이게 휜것일까?<br>100번을 더 던졌는데 이번엔 앞면이 39번 나와서, 앞에 케이스랑 합해서 총 200번 중에 85번 정도 앞면이 나왔다고 치고, 그림을 다시 그려본다</p>
+<img src="/blog/2019/02/27/basic-data-analysis/binomial_2.png" class="" title="동전던지기2">
+
+<p>그림대로라면 200번 던져서 앞면이 85번 이하로 나올 확률이 0.02 라는거다.<br>위의 95% 신뢰구간 그림에서 <strong>아랫쪽 2.5% 구간</strong>에 우리 데이터가 들어왔다!!<br>다시말해, 지금 데이터로는 <em>이 동전은 1/2 확률로 앞면이 나온다</em>는 가설로는 <strong>잘 안일어나는 일</strong>이 일어났고,<br>그래서 <em>이 동전은 휘었다</em>는 주장을 통계 이론에 의거해 꽤나 신빙성 있게 하게 되었다.</p>
+<h2 id="베이즈-확률론"><a href="#베이즈-확률론" class="headerlink" title="베이즈 확률론"></a>베이즈 확률론</h2><p>가설검정을 했더니 매우 피곤해졌다.<br>하지만 여기서 멈출수가 없는데, 간지나는 <strong>데이터 사이언티스트</strong>가 되기 위해 베이지안 추론을 할줄 알아야 되겠다.<br>동전던지기를 베이지안 추론으로 어떻게든 해결할 줄 알아야 되는게 아닐까..</p>
+<p>베이지안 추론을 검색하고 글을 보다보면 <em>베이지안 xx</em> 라고 자꾸 베이지안 시리즈가 나오는데,<br>위에서 다룬 빈도주의와 좀 다른 개념으로 확률을 접근한다.<br>베이즈 확률론 이라고 불리는 이 확률 개념을 보자. (검색하면 베이지안 확률론 이라고도 나온다)<br><a target="_blank" rel="noopener" href="https://ko.wikipedia.org/wiki/%EB%B2%A0%EC%9D%B4%EC%A6%88_%ED%99%95%EB%A5%A0%EB%A1%A0">https://ko.wikipedia.org/wiki/%EB%B2%A0%EC%9D%B4%EC%A6%88_%ED%99%95%EB%A5%A0%EB%A1%A0</a></p>
+<p><em>지식 또는 믿음의 정도를 나타내는 양</em>을 확률로 표현한다는데…  매우 곤란하고 혼란하다.<br>구지 위의 동전 앞면 1/2 확률에 대해 베이지안 스타일로 말해본다면,</p>
+<blockquote>
+<p>나는 이 동전이 1/2 확률로 앞면이 나올꺼라고 믿는 양이 많아…</p>
+</blockquote>
+<p>정도일려나..ㅜㅜ (그냥 헛소리 같다)</p>
+<p>동전가지고 이 소리를 하면 말이 좀 어색하지만, 보통 베이지안을 사용하는 문제의 영역에서는 꽤나 그럴듯한 표현이 된다.</p>
+<blockquote>
+<p>뉴스에서 어떤 병에 걸릴 확률이 1/100 이란다. 조심하래…</p>
+</blockquote>
+<p>위 내용은 빈도주의적 접근을 해서 표본을 구성하고 그중에 몇명이 병에 걸렸는지 세어본 뒤 나온 의미일 수 있다.</p>
+<blockquote>
+<p>100명중에 1 명이 이 병에 걸렸더라. 그니까 병에 걸릴 확률은 1/100 이야. 신뢰수준 95% 에 표본 오차가 어쩌고..</p>
+</blockquote>
+<p>똑똑한 사람들은 가설 검정을 해서 저 확률을 신빙성 있는 주장으로 만들수도 있겠지?<br>(나는 이제 가설검정 못하겠다..ㅠㅠ)</p>
+<p>그럼 좀더 속편하게 베이지안 사고방식으로 말을 해보자 (조금은 덜 배운 베이지안이다)</p>
+<blockquote>
+<p>100명 중에 1명이 이 병에 걸렸더라. 그니까 나는 이 병에 걸릴 확률이 1/100 임에 손모가지를 걸겠어</p>
+</blockquote>
+<p>와 가설 검정을 건너 뛰었다.. 만세!!!<br>근데 그럼 이런 베이지안 사고방식은 어떻게 신빙성을 갖추는건가? 손모가지로?<br>가설검정처럼 똑똑해 보이는 복잡한 과정 없이 그냥 나누기 하나로 퉁쳤는데??</p>
+<p>사실 답으로 제시한 값은 나누기 한번으로 계산한 것과 같지만, 그 안에는 생략한 말들이 있다.<br>생략한 말을 포함해서 조금 더 배운 베이지안 사고방식으로 말을 해보자</p>
+<blockquote>
+<p>답이 1/100 이 아니고 다른 값일 확률도 존재 하지만, 현 시점에서 나는 답이 1/100 일 확률이 제일 큰거 같다</p>
+</blockquote>
+<p>베이지안 확률론에서 내가 제일 혼미했던 부분이 <strong>확률의 확률</strong>을 언급하고 있다는 거였는데,<br>이거는 어떻게 말로 설명하기 어려우니 좀더 글을 읽다 보다보면 이해가 되길 바란다..<br>(나도 수많은 예제를 보고 겨우 정리한 말이 확률의 확률이라는 단어다.. ㅠㅠ)</p>
+<h2 id="베이지안-추론"><a href="#베이지안-추론" class="headerlink" title="베이지안 추론"></a>베이지안 추론</h2><p>아무튼 데이터 사이언티스트 할려면 베이지안 추론을 해야 된다는데. 너무 돌아돌아 왔다.<br>이제 진짜 베이지안 추론이 뭔지 볼수 있다.<br><a target="_blank" rel="noopener" href="https://ko.wikipedia.org/wiki/%EB%B2%A0%EC%9D%B4%EC%A6%88_%EC%B6%94%EB%A1%A0">https://ko.wikipedia.org/wiki/%EB%B2%A0%EC%9D%B4%EC%A6%88_%EC%B6%94%EB%A1%A0</a></p>
+<p><em>추론 대상의 사전 확률과 추가적인 정보를 통해 해당 대상의 사후 확률을 추론하는 방법</em> 이라는데.. ㅠㅠ<br>수많은 글을 섭렵한뒤, 나는 이렇게 생각하기로 했다.</p>
+<ul>
+<li>추론 대상 = 내가 구하고 싶은 사건의 확률</li>
+<li>사전 확률 = 기존에 갖고 있는 데이터로 구한 확률 (또는 데이터가 없다면 그냥 그럴듯한걸로 내세운 확률)</li>
+<li>추가적인 정보 = 이제 새로 구한 데이터</li>
+<li>사후 확률 = 기존 데이터 + 새로 구한 데이터 까지 합해서 구한 확률</li>
+</ul>
+<p>또 다른 말로 표현해보면,<br>베이지안 추론은 <em>현 시점 (현재 내가 가진 데이터 상황)에서의 답</em>을 말하고,<br>데이터가 추가되면 그 데이터에 맞게 확률을 다시 계산함으로써 <em>결론을 갱신</em>해 나간다.<br>데이터가 추가될 때마다 결론이 갱신되고, 문제에 어떠한 확률적 경향이 있다면 점점 그 답에 가까워질 것이다.</p>
+<p>여기서 데이터 추가, 결론 갱신 이라는 속성이 매우 머신러닝 같지 않은가?<br>(그래서 베이지안 검색하다보면 머신러닝이 딸려나오나보다)</p>
+<p>말이 점점 길어지면서  더 혼미하니까, 예제를 보자.</p>
+<blockquote>
+<p>처음에는 100명중에 1명의 환자를 발견했는데, 추가로 100명을 더 검사했더니 3명의 환자가 더 발견 되었다.</p>
+</blockquote>
+<p>일단그림으로 그려보자.<br>참고 : <a target="_blank" rel="noopener" href="https://ratsgo.github.io/statistics/2017/06/30/bayesinfer/">https://ratsgo.github.io/statistics/2017/06/30/bayesinfer/</a><br>그림 그리기 툴: <a target="_blank" rel="noopener" href="https://homepage.stat.uiowa.edu/~mbognar/applets/beta.html">https://homepage.stat.uiowa.edu/~mbognar/applets/beta.html</a></p>
+<p>위 참고 블로그에 따르면 요건 베타 분포로 그리란다.<br>처음 조사에서 100 명중에, 1명은 감염, 99 명은 비감염이다.</p>
+<img src="/blog/2019/02/27/basic-data-analysis/beta_1.png" class="" title="감염자1">
+
+<p>이 그림에 따르면, 그래프가 x 축이 0.01 부분에서 가장 높은데,<br>이게 감염율이 0.01 일 확률 (y축) 이 제일 크다 (확률의 확률..) 라는 의미란다.<br>x 축이 0.01 이 아닌 부분에도 확률이 있음을 확인하자.<br>그치만 그냥 이걸 나같이 덜 배운 사람은 편하게 이렇게 말한다.</p>
+<blockquote>
+<p>이 병에 걸릴 확률은 1% 야..</p>
+</blockquote>
+<p>그러면 추가 검사한 내용까지 포함 해보자.<br>이제 200명 중에, 4명은 감염, 196명은 비감염이다</p>
+<img src="/blog/2019/02/27/basic-data-analysis/beta_2.png" class="" title="감염자2">
+
+<p>이제 데이터가 업데이트 되고, x축이 0.02 부분이 제일 높다.<br>이건 이렇게 편하게 말한다.</p>
+<blockquote>
+<p>이 병에 걸릴 확률은 이제 2% 야..</p>
+</blockquote>
+<p>다시 혼미하게 말해 보자.</p>
+<blockquote>
+<p>“이 병에 걸릴 확률은 2%” 라는 확률이 제일 커.. (혼미)</p>
+</blockquote>
+<p>그러나..</p>
+<p>열심히 공부해서 말만 혼미하게 했지, 결국 4/200 계산했다..<br>다음에 더 복잡한 문제가 나왔을때 쓸 일이 있겠지.. ㅠㅠ<br>(하지만 더 복잡한 문제가 나오면 손도 못댄다고 하더라)</p>
+<h2 id="다시-문제로-돌아가서"><a href="#다시-문제로-돌아가서" class="headerlink" title="다시 문제로 돌아가서.."></a>다시 문제로 돌아가서..</h2><p>‘스키복할인매장’ 검색어를 입력한 사람은 대체 무슨 생각이었을까?<br>이게 처음의 문제였다.</p>
+<p>베이지안 추론의 마지막 단락에 의거하여 내린 결론은,<br>그냥 로그 분석해서 그중에 몇개가 창고형 할인매장의 니즈를 갖추었는지 세어보고, 나누기 하면 끝이라는거다…<br>그러면 대략 이런 말을 하게 될것이다.</p>
+<blockquote>
+<p>“스키복할인매장 검색어를 입력한 사람이 창고형 할인 매장을 찾고 있었을 확률이 xx%” 라는 확률이 제일 커.. (혼미)</p>
+</blockquote>
+<p>로그 분석을 자동화 하는데 시간을 쓰는게 낫겠다.. ㅠㅠㅠㅠ<br>(왠지 여기도 머신러닝 -&gt; 베이지안 xx 의 혼미한 구간이 나타날꺼 같다는…)</p>
+<h2 id="그-외-삽질"><a href="#그-외-삽질" class="headerlink" title="그 외 삽질"></a>그 외 삽질</h2><p>베이지안 추론과 베이지안 정리는 공식은 비슷하게 생겼지만, 풀고자 하는 문제의 도메인이 많이 다르다<br>둘을 같이 공부하다보면 매우 혼미해진다</p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><h3 id="확률-개념-잡기"><a href="#확률-개념-잡기" class="headerlink" title="확률 개념 잡기"></a>확률 개념 잡기</h3><p>확률론 기초 <a target="_blank" rel="noopener" href="https://ratsgo.github.io/statistics/2017/09/21/prob/">https://ratsgo.github.io/statistics/2017/09/21/prob/</a><br>빈도주의적 접근과 베이지안 접근 <a target="_blank" rel="noopener" href="https://blog.naver.com/bestian/10095013721">https://blog.naver.com/bestian/10095013721</a></p>
+<h3 id="빈도주의-통계"><a href="#빈도주의-통계" class="headerlink" title="빈도주의 통계"></a>빈도주의 통계</h3><p>오차범위? 신뢰수준? <a target="_blank" rel="noopener" href="http://www.pagi.co.id/bbs/board.php?bo_table=economy&amp;wr_id=7279">http://www.pagi.co.id/bbs/board.php?bo_table=economy&amp;wr_id=7279</a><br>가설 검정 한번에 정리하기 <a target="_blank" rel="noopener" href="https://kkokkilkon.tistory.com/36">https://kkokkilkon.tistory.com/36</a></p>
+<h3 id="베이지안-통계"><a href="#베이지안-통계" class="headerlink" title="베이지안 통계"></a>베이지안 통계</h3><p>베이지안 통계 첫걸음<br> <a target="_blank" rel="noopener" href="https://medium.com/@deepvalidation/%EB%B2%A0%EC%9D%B4%EC%8B%9C%EC%95%88-%ED%86%B5%EA%B3%84-%EC%B2%AB%EA%B1%B8%EC%9D%8C-7e7e1a5f5adc">https://medium.com/@deepvalidation/%EB%B2%A0%EC%9D%B4%EC%8B%9C%EC%95%88-%ED%86%B5%EA%B3%84-%EC%B2%AB%EA%B1%B8%EC%9D%8C-7e7e1a5f5adc</a><br>베이지안 통계 둘째걸음<br><a target="_blank" rel="noopener" href="https://medium.com/@deepvalidation/%EB%B2%A0%EC%9D%B4%EC%8B%9C%EC%95%88-%ED%86%B5%EA%B3%84-%EB%91%98%EC%A7%B8-%EA%B1%B8%EC%9D%8C-b486aa23d68b">https://medium.com/@deepvalidation/%EB%B2%A0%EC%9D%B4%EC%8B%9C%EC%95%88-%ED%86%B5%EA%B3%84-%EB%91%98%EC%A7%B8-%EA%B1%B8%EC%9D%8C-b486aa23d68b</a><br>베이지안 추론<br> <a target="_blank" rel="noopener" href="https://ratsgo.github.io/statistics/2017/06/30/bayesinfer/">https://ratsgo.github.io/statistics/2017/06/30/bayesinfer/</a></p>
+<h3 id="그래프-그리기-참고"><a href="#그래프-그리기-참고" class="headerlink" title="그래프 그리기 참고"></a>그래프 그리기 참고</h3><p>그래프 그려주는 사이트 모음<br> <a target="_blank" rel="noopener" href="https://easy7.tistory.com/17">https://easy7.tistory.com/17</a></p>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AC%B8%EC%A0%9C%EC%9D%98-%EC%8B%9C%EC%9E%91"><span class="toc-number">1.</span> <span class="toc-text">문제의 시작</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%99%95%EB%A5%A0"><span class="toc-number">2.</span> <span class="toc-text">확률</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B9%88%EB%8F%84%EC%A3%BC%EC%9D%98-%ED%86%B5%EA%B3%84%EC%99%80-%EA%B0%80%EC%84%A4%EA%B2%80%EC%A0%95"><span class="toc-number">3.</span> <span class="toc-text">빈도주의 통계와 가설검정</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B2%A0%EC%9D%B4%EC%A6%88-%ED%99%95%EB%A5%A0%EB%A1%A0"><span class="toc-number">4.</span> <span class="toc-text">베이즈 확률론</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B2%A0%EC%9D%B4%EC%A7%80%EC%95%88-%EC%B6%94%EB%A1%A0"><span class="toc-number">5.</span> <span class="toc-text">베이지안 추론</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%8B%A4%EC%8B%9C-%EB%AC%B8%EC%A0%9C%EB%A1%9C-%EB%8F%8C%EC%95%84%EA%B0%80%EC%84%9C"><span class="toc-number">6.</span> <span class="toc-text">다시 문제로 돌아가서..</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B7%B8-%EC%99%B8-%EC%82%BD%EC%A7%88"><span class="toc-number">7.</span> <span class="toc-text">그 외 삽질</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">8.</span> <span class="toc-text">참고</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%99%95%EB%A5%A0-%EA%B0%9C%EB%85%90-%EC%9E%A1%EA%B8%B0"><span class="toc-number">8.1.</span> <span class="toc-text">확률 개념 잡기</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%B9%88%EB%8F%84%EC%A3%BC%EC%9D%98-%ED%86%B5%EA%B3%84"><span class="toc-number">8.2.</span> <span class="toc-text">빈도주의 통계</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%B2%A0%EC%9D%B4%EC%A7%80%EC%95%88-%ED%86%B5%EA%B3%84"><span class="toc-number">8.3.</span> <span class="toc-text">베이지안 통계</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B7%B8%EB%A6%AC%EA%B8%B0-%EC%B0%B8%EA%B3%A0"><span class="toc-number">8.4.</span> <span class="toc-text">그래프 그리기 참고</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&text=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&is_video=false&description=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지&body=Check out this article: https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&title=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/&name=기초 데이터 분석 방법 - 확률부터 가설검정, 베이지안 추론까지&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>
