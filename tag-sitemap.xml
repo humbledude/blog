@@ -3,6 +3,27 @@
 
 
     <url>
+        <loc>https://humbledude.github.io/blog/tags/ChatGPT/</loc>
+        <lastmod>2023-03-09T16:56:02.884Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://humbledude.github.io/blog/tags/%25EC%25BD%2594%25EB%2593%259C%25EB%25A6%25AC%25EB%25B7%25B0/</loc>
+        <lastmod>2023-03-09T16:56:02.884Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://humbledude.github.io/blog/tags/codereview/</loc>
+        <lastmod>2023-03-09T16:56:02.884Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://humbledude.github.io/blog/tags/airflow/</loc>
         <lastmod>2022-11-30T14:54:49.467Z</lastmod>
         <changefreq>weekly</changefreq>

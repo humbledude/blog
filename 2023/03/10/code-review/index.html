@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="시작하기 전에..아이를 키우는 아빠의 입장에서 똥이라는 키워드는 사실 별로 역한 키워드가 아닙니다.대략 아이가 태어나고 만 7년간 키워보면서 다양한 똥과 씨름하게 되었구요..한 5살 근처에선 아이가 가장 사랑하는 단어가 똥방구가 되어 매일 입에 달고 삽니다.하지만 도저히 이 단어를 가볍게 받아들이지 못하시겠다면, 빠르게 뒤로가기를 눌러 빠져나갑시다. 코드리">
+<meta property="og:type" content="article">
+<meta property="og:title" content="코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT">
+<meta property="og:url" content="https://humbledude.github.io/blog/2023/03/10/code-review/index.html">
+<meta property="og:site_name" content="돌아서면 까먹는다">
+<meta property="og:description" content="시작하기 전에..아이를 키우는 아빠의 입장에서 똥이라는 키워드는 사실 별로 역한 키워드가 아닙니다.대략 아이가 태어나고 만 7년간 키워보면서 다양한 똥과 씨름하게 되었구요..한 5살 근처에선 아이가 가장 사랑하는 단어가 똥방구가 되어 매일 입에 달고 삽니다.하지만 도저히 이 단어를 가볍게 받아들이지 못하시겠다면, 빠르게 뒤로가기를 눌러 빠져나갑시다. 코드리">
+<meta property="og:locale">
+<meta property="og:image" content="https://humbledude.github.io/blog/2023/03/10/code-review/Untitled.png">
+<meta property="og:image" content="https://humbledude.github.io/blog/2023/03/10/code-review/Untitled%201.png">
+<meta property="article:published_time" content="2023-03-09T16:40:00.000Z">
+<meta property="article:modified_time" content="2023-03-09T16:56:02.884Z">
+<meta property="article:author" content="keunhui park">
+<meta property="article:tag" content="codereview">
+<meta property="article:tag" content="코드리뷰">
+<meta property="article:tag" content="ChatGPT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://humbledude.github.io/blog/2023/03/10/code-review/Untitled.png">
+    
+    <link rel="canonical" href="/blog/2023/03/10/code-review/">
+    
+        
+          
+              <link rel="shortcut icon" href="/blog/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/blog/css/rtl.css">
+
+    
+    <!-- google adsense -->
+    
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8259268413610343",
+          enable_page_level_ads: true
+     });
+</script>
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/blog/feed.xml" title="돌아서면 까먹는다" type="application/rss+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/blog/2022/11/30/airflow-basics-1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2023/03/10/code-review/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2023/03/10/code-review/&text=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2023/03/10/code-review/&is_video=false&description=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT&body=Check out this article: https://humbledude.github.io/blog/2023/03/10/code-review/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2023/03/10/code-review/&name=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-%EC%A0%84%EC%97%90"><span class="toc-number">1.</span> <span class="toc-text">시작하기 전에..</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0"><span class="toc-number">2.</span> <span class="toc-text">코드리뷰에 대한 고찰..</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">돌아서면 까먹는다</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-09T16:40:00.000Z" itemprop="datePublished">2023-03-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/ChatGPT/" rel="tag">ChatGPT</a>, <a class="tag-link-link" href="/blog/tags/codereview/" rel="tag">codereview</a>, <a class="tag-link-link" href="/blog/tags/%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0/" rel="tag">코드리뷰</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="시작하기-전에"><a href="#시작하기-전에" class="headerlink" title="시작하기 전에.."></a>시작하기 전에..</h2><p>아이를 키우는 아빠의 입장에서 똥이라는 키워드는 사실 별로 역한 키워드가 아닙니다.<br>대략 아이가 태어나고 만 7년간 키워보면서 다양한 똥과 씨름하게 되었구요..<br>한 5살 근처에선 아이가 가장 사랑하는 단어가 <code>똥방구</code>가 되어 매일 입에 달고 삽니다.<br>하지만 도저히 이 단어를 가볍게 받아들이지 못하시겠다면, 빠르게 뒤로가기를 눌러 빠져나갑시다.</p>
+<h2 id="코드리뷰에-대한-고찰"><a href="#코드리뷰에-대한-고찰" class="headerlink" title="코드리뷰에 대한 고찰.."></a>코드리뷰에 대한 고찰..</h2><p>회사에서 코드리뷰 문화를 정착시키기 위해 열심히 쥬니어들을 세워놓고 설파하기 위해 이빨을 털다보니 이런 비유를 사용하게 되었다.</p>
+<ul>
+<li>코드리뷰를 부담스러워 하거나, 리뷰에 의한 상처를 받는 경우가 있다더라.</li>
+<li>그것은 코드의 품질이 어찌되었던 나의 실력의 산물, 나의 역량이 적나라 하게 담겨져 있는 작품이라는 생각이 있기 때문이다.</li>
+<li>하지만 차라리 내 코드는 사실 <code>똥</code>이라는것을 인정하자. 이건 언젠가 치워야될 똥일 뿐이다.</li>
+<li>그렇다면 내 똥을 열심히 리뷰해주는 (그리고 근 미래에 이 똥을 치우게 될지도 모르는) 사람 에게 감사함을 느끼게 될 것이다</li>
+<li>열심히 똥을 만드는것이 쥬니어의 임무이다. 열심히 <code>다양한 방법</code>으로 똥을 만들어라!</li>
+<li>주의 할점은 시니어도 똥을 만드는 사람일 뿐이다. <code>좀더 치우기 쉬운 똥</code>을 만들 뿐이다.(하지만 여전히 똥이다!)</li>
+<li>처음엔 그냥 처절한 똥을 만들게 되겠지만, 서로의 똥을 리뷰하고 치우다보면 언젠가 <code>잘 치울수 있는 똥</code>을 만들수 있을 것이다. </li>
+<li>다만 서로 똥 만드는 처지로서, 서로를 배려하는 마음으로 이 작업을 수행하는것이 중요하겠다.</li>
+</ul>
+<p>아 좋은 비유였다.. 이 비유를 좀더 확장시켜서 멋진 블로그를 한편 써봐야 겠다는 생각을 하고 집으로 오는길..<br>설마 이 비유로 블로그를 <code>ChatGPT</code> 가 나보다 더 멋지게 쓸수 있는건 아닐까???</p>
+<p>당장 ChatGPT 에게 명령해본다.</p>
+<p>텍스트로 긁어 붙일까 그림을 붙일까 하다가 오늘은 그림으로 붙여본다.</p>
+<img src="/blog/2023/03/10/code-review/Untitled.png" class="" title="명령">
+<img src="/blog/2023/03/10/code-review/Untitled%201.png" class="" title="답변">
+
+<p>짜식.. 꽤 썼군.. </p>
+<p>코드리뷰에 대한 부정적 인식을 개선하기 위해서 옳은 말을 구구절절히 설명하셨고,<br>코드를 똥에 비유한것도.. 나의 의도와는 살짝 다르지만 매끄럽게 적용한것을 볼수 있다.</p>
+<p>하지만 재미가 없다!!!<br>똥이 더 나와야 재미가 있을텐데..<br>똥을 더 넣어서 글을 써달라고 명령을 주면 나를 너무 더러운 인간으로 학습하지 않을까 (이 친구는 배우는것을 잘한다메)</p>
+<p>내가 얘보다 더 재미나게 글을 쓰고 있는건 맞겠지..??</p>
+<p>다음번엔 좀더 재미나게 글을써야겠다.<br>그럼 20000</p>
+
+  </div>
+</article>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 광고 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8259268413610343"
+     data-ad-slot="6751305137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-%EC%A0%84%EC%97%90"><span class="toc-number">1.</span> <span class="toc-text">시작하기 전에..</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0"><span class="toc-number">2.</span> <span class="toc-text">코드리뷰에 대한 고찰..</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://humbledude.github.io/blog/2023/03/10/code-review/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://humbledude.github.io/blog/2023/03/10/code-review/&text=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://humbledude.github.io/blog/2023/03/10/code-review/&is_video=false&description=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT&body=Check out this article: https://humbledude.github.io/blog/2023/03/10/code-review/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://humbledude.github.io/blog/2023/03/10/code-review/&title=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://humbledude.github.io/blog/2023/03/10/code-review/&name=코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2023 keunhui park
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/about/">About</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/humbledude">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/blog/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-129763747-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'githubpages-4';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>

@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://humbledude.github.io/blog/2023/03/10/code-review/</loc>
+        <lastmod>2023-03-09T16:56:02.884Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://humbledude.github.io/blog/2022/11/30/airflow-basics-1/</loc>
         <lastmod>2022-11-30T14:54:49.467Z</lastmod>
         <changefreq>weekly</changefreq>

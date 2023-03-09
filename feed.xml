@@ -9,8 +9,36 @@
     <atom:link href="https://humbledude.github.io/blog/feed.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Wed, 30 Nov 2022 14:54:49 GMT</pubDate>
+    <pubDate>Thu, 09 Mar 2023 16:56:02 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>코드리뷰 문화 장려 - 코드와 똥기저귀, 그리고 ChatGPT</title>
+      <link>https://humbledude.github.io/blog/2023/03/10/code-review/</link>
+      <guid>https://humbledude.github.io/blog/2023/03/10/code-review/</guid>
+      <pubDate>Thu, 09 Mar 2023 16:40:00 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;시작하기-전에&quot;&gt;&lt;a href=&quot;#시작하기-전에&quot; class=&quot;headerlink&quot; title=&quot;시작하기 전에..&quot;&gt;&lt;/a&gt;시작하기 전에..&lt;/h2&gt;&lt;p&gt;아이를 키우는 아빠의 입장에서 똥이라는 키워드는 사실 별로 역한 키워드가 아닙니다.</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="시작하기-전에"><a href="#시작하기-전에" class="headerlink" title="시작하기 전에.."></a>시작하기 전에..</h2><p>아이를 키우는 아빠의 입장에서 똥이라는 키워드는 사실 별로 역한 키워드가 아닙니다.<br>대략 아이가 태어나고 만 7년간 키워보면서 다양한 똥과 씨름하게 되었구요..<br>한 5살 근처에선 아이가 가장 사랑하는 단어가 <code>똥방구</code>가 되어 매일 입에 달고 삽니다.<br>하지만 도저히 이 단어를 가볍게 받아들이지 못하시겠다면, 빠르게 뒤로가기를 눌러 빠져나갑시다.</p><h2 id="코드리뷰에-대한-고찰"><a href="#코드리뷰에-대한-고찰" class="headerlink" title="코드리뷰에 대한 고찰.."></a>코드리뷰에 대한 고찰..</h2><p>회사에서 코드리뷰 문화를 정착시키기 위해 열심히 쥬니어들을 세워놓고 설파하기 위해 이빨을 털다보니 이런 비유를 사용하게 되었다.</p><ul><li>코드리뷰를 부담스러워 하거나, 리뷰에 의한 상처를 받는 경우가 있다더라.</li><li>그것은 코드의 품질이 어찌되었던 나의 실력의 산물, 나의 역량이 적나라 하게 담겨져 있는 작품이라는 생각이 있기 때문이다.</li><li>하지만 차라리 내 코드는 사실 <code>똥</code>이라는것을 인정하자. 이건 언젠가 치워야될 똥일 뿐이다.</li><li>그렇다면 내 똥을 열심히 리뷰해주는 (그리고 근 미래에 이 똥을 치우게 될지도 모르는) 사람 에게 감사함을 느끼게 될 것이다</li><li>열심히 똥을 만드는것이 쥬니어의 임무이다. 열심히 <code>다양한 방법</code>으로 똥을 만들어라!</li><li>주의 할점은 시니어도 똥을 만드는 사람일 뿐이다. <code>좀더 치우기 쉬운 똥</code>을 만들 뿐이다.(하지만 여전히 똥이다!)</li><li>처음엔 그냥 처절한 똥을 만들게 되겠지만, 서로의 똥을 리뷰하고 치우다보면 언젠가 <code>잘 치울수 있는 똥</code>을 만들수 있을 것이다. </li><li>다만 서로 똥 만드는 처지로서, 서로를 배려하는 마음으로 이 작업을 수행하는것이 중요하겠다.</li></ul><p>아 좋은 비유였다.. 이 비유를 좀더 확장시켜서 멋진 블로그를 한편 써봐야 겠다는 생각을 하고 집으로 오는길..<br>설마 이 비유로 블로그를 <code>ChatGPT</code> 가 나보다 더 멋지게 쓸수 있는건 아닐까???</p><p>당장 ChatGPT 에게 명령해본다.</p><p>텍스트로 긁어 붙일까 그림을 붙일까 하다가 오늘은 그림으로 붙여본다.</p><img src="/blog/2023/03/10/code-review/Untitled.png" class="" title="명령"><img src="/blog/2023/03/10/code-review/Untitled%201.png" class="" title="답변"><p>짜식.. 꽤 썼군.. </p><p>코드리뷰에 대한 부정적 인식을 개선하기 위해서 옳은 말을 구구절절히 설명하셨고,<br>코드를 똥에 비유한것도.. 나의 의도와는 살짝 다르지만 매끄럽게 적용한것을 볼수 있다.</p><p>하지만 재미가 없다!!!<br>똥이 더 나와야 재미가 있을텐데..<br>똥을 더 넣어서 글을 써달라고 명령을 주면 나를 너무 더러운 인간으로 학습하지 않을까 (이 친구는 배우는것을 잘한다메)</p><p>내가 얘보다 더 재미나게 글을 쓰고 있는건 맞겠지..??</p><p>다음번엔 좀더 재미나게 글을써야겠다.<br>그럼 20000</p>]]></content:encoded>
+      
+      
+      
+      <category domain="https://humbledude.github.io/blog/tags/codereview/">codereview</category>
+      
+      <category domain="https://humbledude.github.io/blog/tags/%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0/">코드리뷰</category>
+      
+      <category domain="https://humbledude.github.io/blog/tags/ChatGPT/">ChatGPT</category>
+      
+      
+      <comments>https://humbledude.github.io/blog/2023/03/10/code-review/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Airflow 기초 #1 : 용어정리</title>
