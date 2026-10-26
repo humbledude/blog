@@ -1,0 +1,804 @@
+{
+  "measurement_date": "2026-10-26",
+  "note": "Sequential 60-second protocol-bot phases. 12/16 players use mixed20/30Hz rooms. Earlier Cloudflare comparison is separate, lighter load and earlier game build; not directly comparable.",
+  "phases": [
+    {
+      "provider": "oracle",
+      "players": 4,
+      "mixed_tick_rates": false,
+      "duration_ms": 60007,
+      "aggregate": {
+        "rttMs": {
+          "count": 236,
+          "min": 40.29,
+          "max": 66.42,
+          "mean": 42.36,
+          "p50": 42.21,
+          "p95": 44.13,
+          "p99": 45.8
+        },
+        "ackLatencyMs": {
+          "count": 5365,
+          "min": 41.43,
+          "max": 109.98,
+          "mean": 66.48,
+          "p50": 67.42,
+          "p95": 70.55,
+          "p99": 76.79
+        },
+        "tickIntervalMs": {
+          "count": 7161,
+          "min": 0.01,
+          "max": 74.55,
+          "mean": 33.49,
+          "p50": 33.49,
+          "p95": 34.6,
+          "p99": 35.62
+        },
+        "inputLoopLatenessMs": {
+          "count": 7093,
+          "min": 0,
+          "max": 40.58,
+          "mean": 0.53,
+          "p50": 0.25,
+          "p95": 1.69,
+          "p99": 2.54
+        },
+        "totalTravelDistancePx": 17973.2,
+        "totalPositionChanges": 2998,
+        "avgAliveRatio": 0.758,
+        "totalBombsObserved": 17284,
+        "totalOwnResets": 54,
+        "totalBytesReceived": 12318708,
+        "totalBytesSent": 464959,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "sampleCount": 30,
+        "containerCpuPercent": {
+          "count": 30,
+          "mean": 2.594333333333333,
+          "p95": 3.85,
+          "max": 4.34
+        },
+        "containerMemoryMiB": {
+          "count": 30,
+          "mean": 134.89166666666668,
+          "p95": 135.18359375,
+          "max": 135.18359375
+        },
+        "hostCpuPercent": {
+          "count": 30,
+          "mean": 1.5613333333333332,
+          "p95": 3.01,
+          "max": 3.19
+        },
+        "stealPercent": {
+          "count": 30,
+          "mean": 0.24033333333333334,
+          "p95": 0.51,
+          "max": 2.7
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        }
+      }
+    },
+    {
+      "provider": "oracle",
+      "players": 8,
+      "mixed_tick_rates": false,
+      "duration_ms": 60041,
+      "aggregate": {
+        "rttMs": {
+          "count": 472,
+          "min": 39.98,
+          "max": 97.85,
+          "mean": 42.52,
+          "p50": 42.3,
+          "p95": 44.5,
+          "p99": 46.11
+        },
+        "ackLatencyMs": {
+          "count": 10343,
+          "min": 40.66,
+          "max": 146.96,
+          "mean": 65.73,
+          "p50": 67.16,
+          "p95": 73.95,
+          "p99": 76.42
+        },
+        "tickIntervalMs": {
+          "count": 14400,
+          "min": 0.01,
+          "max": 100.21,
+          "mean": 33.33,
+          "p50": 33.31,
+          "p95": 34.5,
+          "p99": 35.69
+        },
+        "inputLoopLatenessMs": {
+          "count": 14207,
+          "min": 0,
+          "max": 111.25,
+          "mean": 0.51,
+          "p50": 0.1,
+          "p95": 1.74,
+          "p99": 2.39
+        },
+        "totalTravelDistancePx": 31806.2,
+        "totalPositionChanges": 5372,
+        "avgAliveRatio": 0.731,
+        "totalBombsObserved": 35380,
+        "totalOwnResets": 119,
+        "totalBytesReceived": 24953755,
+        "totalBytesSent": 897661,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "sampleCount": 30,
+        "containerCpuPercent": {
+          "count": 30,
+          "mean": 3.919,
+          "p95": 4.43,
+          "max": 5.32
+        },
+        "containerMemoryMiB": {
+          "count": 30,
+          "mean": 135.00130208333334,
+          "p95": 135.1328125,
+          "max": 135.171875
+        },
+        "hostCpuPercent": {
+          "count": 30,
+          "mean": 2.5136666666666665,
+          "p95": 3.02,
+          "max": 3.51
+        },
+        "stealPercent": {
+          "count": 30,
+          "mean": 0.5176666666666667,
+          "p95": 1.0,
+          "max": 1.01
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        },
+        "room-30hz-2": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        }
+      }
+    },
+    {
+      "provider": "oracle",
+      "players": 12,
+      "mixed_tick_rates": true,
+      "duration_ms": 60071,
+      "aggregate": {
+        "rttMs": {
+          "count": 708,
+          "min": 40.19,
+          "max": 50.9,
+          "mean": 43.25,
+          "p50": 42.74,
+          "p95": 47.77,
+          "p99": 48.73
+        },
+        "ackLatencyMs": {
+          "count": 13909,
+          "min": 41.56,
+          "max": 108.32,
+          "mean": 64.09,
+          "p50": 67.21,
+          "p95": 70.9,
+          "p99": 99.91
+        },
+        "tickIntervalMs": {
+          "count": 19144,
+          "min": 27.5,
+          "max": 56.94,
+          "mean": 37.62,
+          "p50": 33.63,
+          "p95": 50.86,
+          "p99": 51.42
+        },
+        "inputLoopLatenessMs": {
+          "count": 19068,
+          "min": 0,
+          "max": 53.03,
+          "mean": 0.34,
+          "p50": 0.1,
+          "p95": 1.24,
+          "p99": 1.95
+        },
+        "totalTravelDistancePx": 44205.2,
+        "totalPositionChanges": 6478,
+        "avgAliveRatio": 0.731,
+        "totalBombsObserved": 47048,
+        "totalOwnResets": 180,
+        "totalBytesReceived": 32905216,
+        "totalBytesSent": 1209997,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "sampleCount": 30,
+        "containerCpuPercent": {
+          "count": 30,
+          "mean": 4.451333333333333,
+          "p95": 4.99,
+          "max": 5.05
+        },
+        "containerMemoryMiB": {
+          "count": 30,
+          "mean": 134.06796875,
+          "p95": 134.421875,
+          "max": 134.61328125
+        },
+        "hostCpuPercent": {
+          "count": 30,
+          "mean": 2.735333333333333,
+          "p95": 3.27,
+          "max": 3.51
+        },
+        "stealPercent": {
+          "count": 30,
+          "mean": 0.46900000000000003,
+          "p95": 1.01,
+          "max": 1.01
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        },
+        "room-30hz-2": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        },
+        "room-20hz-1": {
+          "serverTickP95Max": 51,
+          "droppedDebtMsMax": 0,
+          "tickRate": 20
+        }
+      }
+    },
+    {
+      "provider": "oracle",
+      "players": 16,
+      "mixed_tick_rates": true,
+      "duration_ms": 60054,
+      "aggregate": {
+        "rttMs": {
+          "count": 944,
+          "min": 39.68,
+          "max": 49.42,
+          "mean": 42.42,
+          "p50": 42.08,
+          "p95": 46.97,
+          "p99": 48.1
+        },
+        "ackLatencyMs": {
+          "count": 17928,
+          "min": 40.4,
+          "max": 107.89,
+          "mean": 63.62,
+          "p50": 66.73,
+          "p95": 77.01,
+          "p99": 91.68
+        },
+        "tickIntervalMs": {
+          "count": 23893,
+          "min": 26.84,
+          "max": 56.91,
+          "mean": 40.18,
+          "p50": 33.99,
+          "p95": 51.11,
+          "p99": 51.75
+        },
+        "inputLoopLatenessMs": {
+          "count": 23783,
+          "min": 0,
+          "max": 52.72,
+          "mean": 0.43,
+          "p50": 0.17,
+          "p95": 1.48,
+          "p99": 2.19
+        },
+        "totalTravelDistancePx": 64361.5,
+        "totalPositionChanges": 9052,
+        "avgAliveRatio": 0.756,
+        "totalBombsObserved": 57372,
+        "totalOwnResets": 217,
+        "totalBytesReceived": 40616387,
+        "totalBytesSent": 1560330,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "sampleCount": 30,
+        "containerCpuPercent": {
+          "count": 30,
+          "mean": 5.802,
+          "p95": 6.89,
+          "max": 7.65
+        },
+        "containerMemoryMiB": {
+          "count": 30,
+          "mean": 134.60481770833334,
+          "p95": 135.6328125,
+          "max": 135.6328125
+        },
+        "hostCpuPercent": {
+          "count": 30,
+          "mean": 3.6703333333333332,
+          "p95": 4.77,
+          "max": 4.79
+        },
+        "stealPercent": {
+          "count": 30,
+          "mean": 0.6636666666666666,
+          "p95": 1.26,
+          "max": 1.26
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        },
+        "room-30hz-2": {
+          "serverTickP95Max": 35,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        },
+        "room-20hz-1": {
+          "serverTickP95Max": 52,
+          "droppedDebtMsMax": 0,
+          "tickRate": 20
+        },
+        "room-20hz-2": {
+          "serverTickP95Max": 52,
+          "droppedDebtMsMax": 0,
+          "tickRate": 20
+        }
+      }
+    },
+    {
+      "provider": "render",
+      "players": 4,
+      "mixed_tick_rates": false,
+      "duration_ms": 60018,
+      "aggregate": {
+        "rttMs": {
+          "count": 236,
+          "min": 103.62,
+          "max": 172.86,
+          "mean": 114.52,
+          "p50": 113.91,
+          "p95": 127.28,
+          "p99": 133.99
+        },
+        "ackLatencyMs": {
+          "count": 5200,
+          "min": 104.25,
+          "max": 241.35,
+          "mean": 131.61,
+          "p50": 131.79,
+          "p95": 145.59,
+          "p99": 160.64
+        },
+        "tickIntervalMs": {
+          "count": 7212,
+          "min": 0.03,
+          "max": 196.58,
+          "mean": 33.26,
+          "p50": 33.16,
+          "p95": 36.89,
+          "p99": 41.19
+        },
+        "inputLoopLatenessMs": {
+          "count": 7083,
+          "min": 0,
+          "max": 36.91,
+          "mean": 0.59,
+          "p50": 0.27,
+          "p95": 1.93,
+          "p99": 2.37
+        },
+        "totalTravelDistancePx": 16087.5,
+        "totalPositionChanges": 2718,
+        "avgAliveRatio": 0.737,
+        "totalBombsObserved": 16720,
+        "totalOwnResets": 55,
+        "totalBytesReceived": 12331559,
+        "totalBytesSent": 451776,
+        "totalDisconnects": 0
+      },
+      "host_metrics": null,
+      "room_metrics": {
+        "room-30hz-1": {
+          "serverTickP95Max": 60,
+          "droppedDebtMsMax": 0,
+          "tickRate": 30
+        }
+      }
+    },
+    {
+      "provider": "gcp-seoul",
+      "players": 4,
+      "mixed_tick_rates": false,
+      "duration_ms": 60071,
+      "aggregate": {
+        "rttMs": {
+          "count": 237,
+          "min": 4.3,
+          "max": 28.68,
+          "mean": 5.8,
+          "p50": 5.69,
+          "p95": 6.78,
+          "p99": 6.96
+        },
+        "ackLatencyMs": {
+          "count": 5306,
+          "min": 4.91,
+          "max": 72.64,
+          "mean": 31.43,
+          "p50": 33.5,
+          "p95": 36.1,
+          "p99": 65.79
+        },
+        "tickIntervalMs": {
+          "count": 7184,
+          "min": 8.73,
+          "max": 57.25,
+          "mean": 33.43,
+          "p50": 33.45,
+          "p95": 34.27,
+          "p99": 35.21
+        },
+        "inputLoopLatenessMs": {
+          "count": 7134,
+          "min": 0,
+          "max": 34.65,
+          "mean": 0.36,
+          "p50": 0.17,
+          "p95": 1.12,
+          "p99": 1.57
+        },
+        "totalTravelDistancePx": 16672.8,
+        "totalPositionChanges": 2776,
+        "avgAliveRatio": 0.743,
+        "totalBombsObserved": 17500,
+        "totalOwnResets": 58,
+        "totalBytesReceived": 12432783,
+        "totalBytesSent": 459549,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "samples": 30,
+        "cpu": {
+          "count": 30,
+          "mean": 2.921,
+          "p95": 6.19,
+          "max": 6.84
+        },
+        "memoryMiB": {
+          "count": 30,
+          "mean": 138.17057291666666,
+          "p95": 145.203125,
+          "max": 145.25390625
+        },
+        "steal": {
+          "count": 30,
+          "mean": 0.008333333333333333,
+          "p95": 0.0,
+          "max": 0.25
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "tickRate": 30,
+          "tickP95Max": 35,
+          "debtMax": 0
+        }
+      }
+    },
+    {
+      "provider": "gcp-seoul",
+      "players": 8,
+      "mixed_tick_rates": false,
+      "duration_ms": 60078,
+      "aggregate": {
+        "rttMs": {
+          "count": 473,
+          "min": 3.99,
+          "max": 11.26,
+          "mean": 6.17,
+          "p50": 6.08,
+          "p95": 7.45,
+          "p99": 10.19
+        },
+        "ackLatencyMs": {
+          "count": 10545,
+          "min": 4.35,
+          "max": 72.63,
+          "mean": 32.34,
+          "p50": 34.22,
+          "p95": 38.4,
+          "p99": 39.87
+        },
+        "tickIntervalMs": {
+          "count": 14280,
+          "min": 23.43,
+          "max": 43.81,
+          "mean": 33.63,
+          "p50": 33.65,
+          "p95": 34.6,
+          "p99": 35.9
+        },
+        "inputLoopLatenessMs": {
+          "count": 14229,
+          "min": 0,
+          "max": 36.25,
+          "mean": 0.42,
+          "p50": 0.3,
+          "p95": 1.23,
+          "p99": 1.61
+        },
+        "totalTravelDistancePx": 33813.3,
+        "totalPositionChanges": 5651,
+        "avgAliveRatio": 0.742,
+        "totalBombsObserved": 35608,
+        "totalOwnResets": 118,
+        "totalBytesReceived": 24857881,
+        "totalBytesSent": 913389,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "samples": 30,
+        "cpu": {
+          "count": 30,
+          "mean": 3.1086666666666667,
+          "p95": 4.19,
+          "max": 5.97
+        },
+        "memoryMiB": {
+          "count": 30,
+          "mean": 137.408203125,
+          "p95": 137.8125,
+          "max": 138.0625
+        },
+        "steal": {
+          "count": 30,
+          "mean": 0.016666666666666666,
+          "p95": 0.25,
+          "max": 0.25
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "tickRate": 30,
+          "tickP95Max": 35,
+          "debtMax": 0
+        },
+        "room-30hz-2": {
+          "tickRate": 30,
+          "tickP95Max": 35,
+          "debtMax": 0
+        }
+      }
+    },
+    {
+      "provider": "gcp-seoul",
+      "players": 12,
+      "mixed_tick_rates": true,
+      "duration_ms": 60004,
+      "aggregate": {
+        "rttMs": {
+          "count": 708,
+          "min": 4.14,
+          "max": 26.08,
+          "mean": 5.94,
+          "p50": 5.84,
+          "p95": 7.6,
+          "p99": 8.31
+        },
+        "ackLatencyMs": {
+          "count": 13985,
+          "min": 4.39,
+          "max": 105.39,
+          "mean": 30.9,
+          "p50": 32.58,
+          "p95": 51.09,
+          "p99": 55.97
+        },
+        "tickIntervalMs": {
+          "count": 19196,
+          "min": 1.86,
+          "max": 68.92,
+          "mean": 37.48,
+          "p50": 33.51,
+          "p95": 50.7,
+          "p99": 51.27
+        },
+        "inputLoopLatenessMs": {
+          "count": 18921,
+          "min": 0,
+          "max": 53.46,
+          "mean": 0.56,
+          "p50": 0.25,
+          "p95": 1.89,
+          "p99": 2.59
+        },
+        "totalTravelDistancePx": 49337.8,
+        "totalPositionChanges": 7445,
+        "avgAliveRatio": 0.739,
+        "totalBombsObserved": 45888,
+        "totalOwnResets": 175,
+        "totalBytesReceived": 32679810,
+        "totalBytesSent": 1214651,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "samples": 30,
+        "cpu": {
+          "count": 30,
+          "mean": 3.806,
+          "p95": 4.55,
+          "max": 4.68
+        },
+        "memoryMiB": {
+          "count": 30,
+          "mean": 137.11979166666666,
+          "p95": 137.4375,
+          "max": 137.44140625
+        },
+        "steal": {
+          "count": 30,
+          "mean": 0.016666666666666666,
+          "p95": 0.25,
+          "max": 0.25
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "tickRate": 30,
+          "tickP95Max": 34,
+          "debtMax": 0
+        },
+        "room-30hz-2": {
+          "tickRate": 30,
+          "tickP95Max": 34,
+          "debtMax": 0
+        },
+        "room-20hz-1": {
+          "tickRate": 20,
+          "tickP95Max": 51,
+          "debtMax": 0
+        }
+      }
+    },
+    {
+      "provider": "gcp-seoul",
+      "players": 16,
+      "mixed_tick_rates": true,
+      "duration_ms": 60081,
+      "aggregate": {
+        "rttMs": {
+          "count": 946,
+          "min": 3.75,
+          "max": 15.42,
+          "mean": 5.67,
+          "p50": 5.6,
+          "p95": 6.96,
+          "p99": 8.8
+        },
+        "ackLatencyMs": {
+          "count": 17799,
+          "min": 4.57,
+          "max": 102.97,
+          "mean": 33.35,
+          "p50": 33.57,
+          "p95": 51.47,
+          "p99": 54.81
+        },
+        "tickIntervalMs": {
+          "count": 23928,
+          "min": 19.79,
+          "max": 60.89,
+          "mean": 40.13,
+          "p50": 33.93,
+          "p95": 50.98,
+          "p99": 51.55
+        },
+        "inputLoopLatenessMs": {
+          "count": 23654,
+          "min": 0,
+          "max": 52.92,
+          "mean": 0.62,
+          "p50": 0.38,
+          "p95": 2.02,
+          "p99": 2.66
+        },
+        "totalTravelDistancePx": 69130.5,
+        "totalPositionChanges": 9801,
+        "avgAliveRatio": 0.754,
+        "totalBombsObserved": 59472,
+        "totalOwnResets": 221,
+        "totalBytesReceived": 41166240,
+        "totalBytesSent": 1548590,
+        "totalDisconnects": 0
+      },
+      "host_metrics": {
+        "samples": 30,
+        "cpu": {
+          "count": 30,
+          "mean": 4.089666666666667,
+          "p95": 4.47,
+          "max": 4.57
+        },
+        "memoryMiB": {
+          "count": 30,
+          "mean": 138.09869791666668,
+          "p95": 138.4765625,
+          "max": 138.50390625
+        },
+        "steal": {
+          "count": 30,
+          "mean": 0.016666666666666666,
+          "p95": 0.25,
+          "max": 0.25
+        }
+      },
+      "room_metrics": {
+        "room-30hz-1": {
+          "tickRate": 30,
+          "tickP95Max": 35,
+          "debtMax": 0
+        },
+        "room-30hz-2": {
+          "tickRate": 30,
+          "tickP95Max": 34,
+          "debtMax": 0
+        },
+        "room-20hz-1": {
+          "tickRate": 20,
+          "tickP95Max": 51,
+          "debtMax": 0
+        },
+        "room-20hz-2": {
+          "tickRate": 20,
+          "tickP95Max": 52,
+          "debtMax": 0
+        }
+      }
+    }
+  ],
+  "earlier_30s_comparison": {
+    "cloudflare": {
+      "samples": 12,
+      "rtt_min_ms": 42,
+      "rtt_median_ms": 53.0,
+      "rtt_max_ms": 72
+    },
+    "render": {
+      "samples": 12,
+      "rtt_min_ms": 116,
+      "rtt_median_ms": 119.0,
+      "rtt_max_ms": 132
+    }
+  }
+}
