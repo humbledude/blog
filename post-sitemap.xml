@@ -9,7 +9,7 @@
 
     <url>
         <loc>https://humbledude.github.io/blog/2026/10/26/free-cloud-game-server-latency/</loc>
-        <lastmod>2026-10-26T08:48:51.535Z</lastmod>
+        <lastmod>2026-10-26T23:52:29.472Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -32,14 +32,6 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/2022/11/17/university/</loc>
-        <lastmod>2026-10-26T08:39:26.295Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>https://humbledude.github.io/blog/2018/12/01/spark-on-kube/</loc>
         <lastmod>2026-10-26T08:39:26.295Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -48,8 +40,8 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/2018/11/16/mysql-backup-restore/</loc>
-        <lastmod>2026-10-26T08:39:26.294Z</lastmod>
+        <loc>https://humbledude.github.io/blog/2022/11/17/university/</loc>
+        <lastmod>2026-10-26T08:39:26.295Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -57,6 +49,14 @@
 
     <url>
         <loc>https://humbledude.github.io/blog/2021/03/31/pyenv-experiment/</loc>
+        <lastmod>2026-10-26T08:39:26.294Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://humbledude.github.io/blog/2018/11/16/mysql-backup-restore/</loc>
         <lastmod>2026-10-26T08:39:26.294Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -80,7 +80,7 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/</loc>
+        <loc>https://humbledude.github.io/blog/2018/11/22/csforhuman-0/</loc>
         <lastmod>2026-10-26T08:39:26.286Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -88,7 +88,7 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/2018/11/22/csforhuman-0/</loc>
+        <loc>https://humbledude.github.io/blog/2018/11/22/csforhuman-1-0-1/</loc>
         <lastmod>2026-10-26T08:39:26.286Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -136,7 +136,7 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/</loc>
+        <loc>https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/</loc>
         <lastmod>2026-10-26T08:39:26.283Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -144,7 +144,7 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/2019/07/12/airflow-on-k8s/</loc>
+        <loc>https://humbledude.github.io/blog/2019/02/27/basic-data-analysis/</loc>
         <lastmod>2026-10-26T08:39:26.283Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
