@@ -4,35 +4,35 @@
 
     <url>
         <loc>https://humbledude.github.io/blog/tags/%25EB%25AC%25B4%25EB%25A3%258C-%25EC%2584%259C%25EB%25B2%2584/</loc>
-        <lastmod>2026-10-27T00:07:32.256Z</lastmod>
+        <lastmod>2026-10-27T00:20:42.172Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://humbledude.github.io/blog/tags/%25EB%25B2%25A4%25EC%25B9%2598%25EB%25A7%2588%25ED%2581%25AC/</loc>
-        <lastmod>2026-10-27T00:07:32.256Z</lastmod>
+        <lastmod>2026-10-27T00:20:42.172Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://humbledude.github.io/blog/tags/WebSocket/</loc>
-        <lastmod>2026-10-27T00:07:32.256Z</lastmod>
+        <lastmod>2026-10-27T00:20:42.172Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://humbledude.github.io/blog/tags/%25EA%25B2%258C%25EC%259E%2584-%25EC%2584%259C%25EB%25B2%2584/</loc>
-        <lastmod>2026-10-27T00:07:32.256Z</lastmod>
+        <lastmod>2026-10-27T00:20:42.172Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://humbledude.github.io/blog/tags/%25ED%2581%25B4%25EB%259D%25BC%25EC%259A%25B0%25EB%2593%259C/</loc>
-        <lastmod>2026-10-27T00:07:32.256Z</lastmod>
+        <lastmod>2026-10-27T00:20:42.172Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -73,13 +73,6 @@
     </url>
 
     <url>
-        <loc>https://humbledude.github.io/blog/tags/spark/</loc>
-        <lastmod>2026-10-26T08:39:26.295Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://humbledude.github.io/blog/tags/%25EB%258D%25B0%25EC%259D%25B4%25ED%2584%25B0-%25EB%2593%259C%25EB%25A6%25AC%25EB%25B8%2590-%25EB%2586%258D%25EB%258B%25B4/</loc>
         <lastmod>2026-10-26T08:39:26.295Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -95,6 +88,13 @@
 
     <url>
         <loc>https://humbledude.github.io/blog/tags/python/</loc>
+        <lastmod>2026-10-26T08:39:26.295Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://humbledude.github.io/blog/tags/spark/</loc>
         <lastmod>2026-10-26T08:39:26.295Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
